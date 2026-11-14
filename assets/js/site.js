@@ -65,7 +65,7 @@
     toggle.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
     menu.addEventListener("click", (e) => { if (e.target.closest("a")) set(false); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") set(false); });
-    matchMedia("(min-width: 48em)").addEventListener("change", (e) => { if (e.matches) set(false); });
+    matchMedia("(min-width: 54.01em)").addEventListener("change", (e) => { if (e.matches) set(false); });
   }
 
   // Holofote: atualiza --mx/--my do cartão sob o cursor (um listener só, com rAF).
@@ -87,6 +87,11 @@
 
   // Revelação ao rolar
   const els = document.querySelectorAll(".reveal");
+  // Stagger: irmãos .reveal entram em sequência (60 ms cada, no máximo 5 passos).
+  els.forEach((el) => {
+    const sibs = [...el.parentElement.children].filter((s) => s.classList.contains("reveal"));
+    if (sibs.length > 1) el.style.setProperty("--i", Math.min(sibs.indexOf(el), 5));
+  });
   if ("IntersectionObserver" in window && !reduce.matches) {
     const io = new IntersectionObserver((es) => es.forEach((en) => {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }

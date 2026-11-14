@@ -54,7 +54,7 @@
     };
     opts.cepBairroIndex = G.construirIndiceCepBairro(idx, opts.cepIndex);
     drawMap();
-    $(".geo-ex").innerHTML = EXAMPLES.map((x, i) => `<button type="button" class="chip" data-i="${i}">${esc(x.e)}</button>`).join("");
+    // Os botões de exemplo já vêm no HTML (sem deslocar a página quando o motor carrega).
     $(".geo-ex").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       const x = EXAMPLES[+b.dataset.i];
@@ -122,15 +122,17 @@
     const ent = [["tipo", q.tipo], ["via", q.via], ["quadra", q.quadra], ["lote", q.lote], ["número", q.numero], ["km", q.km], ["cruzamento", q.viaCruzamento]]
       .map(([k, v]) => `<span class="ent${v == null ? " nil" : ""}"><i>${k}</i>${v == null ? "—" : esc(v)}</span>`).join("");
     const gate = (v) => `<span class="gate" style="left:${v * 100}%"></span>`;
-    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" style="width:${(x.s * 100).toFixed(0)}%"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
+    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" data-v="${x.s.toFixed(3)}"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
     $(".geo-steps").innerHTML = `
-      <li><span class="n">1</span><div><h4>Normalização</h4><code>${esc(norm || "—")}</code></div></li>
-      <li><span class="n">2</span><div><h4>Entidades extraídas</h4><div class="ents">${ent}</div></div></li>
-      <li><span class="n">3</span><div><h4>Busca da via <small>similaridade · cortes 0,70 / 0,85 / 0,92</small></h4><div class="cands">${bars}</div></div></li>
-      <li class="result" style="--st: var(${st.color})"><span class="n">4</span><div><h4>Decisão</h4>
+      <li><span class="n">1</span><div><h3>Normalização</h3><code>${esc(norm || "—")}</code></div></li>
+      <li><span class="n">2</span><div><h3>Entidades extraídas</h3><div class="ents">${ent}</div></div></li>
+      <li><span class="n">3</span><div><h3>Busca da via <small>similaridade · cortes 0,70 / 0,85 / 0,92</small></h3><div class="cands">${bars}</div></div></li>
+      <li class="result" style="--st: var(${st.color})"><span class="n">4</span><div><h3>Decisão</h3>
         <p class="badge"><b>${st.label}</b> ${st.note}</p>
         <p class="why">${esc(r.motivo)}</p>
         <p class="meta mono">${r.candidatosNaRua || 0} ponto(s) candidatos · ${ms < 1 ? "<1" : ms.toFixed(1)} ms no seu navegador</p></div></li>`;
+    // barras: entram de 0 até o score (transform, sem layout)
+    requestAnimationFrame(() => $(".geo-steps").querySelectorAll(".fl").forEach((f) => f.style.setProperty("--v", f.dataset.v)));
   }
 
   function renderMap(r) {
