@@ -59,3 +59,7 @@ Tokens em `assets/css/base.css`. Anima-se só `transform` e `opacity`.
 | `--ease-emph` | `cubic-bezier(.16,1,.3,1)` | só o que precisa chamar atenção (hero, barras do laboratório) |
 
 O reveal entra em sequência entre irmãos (60 ms por passo, no máximo 5). Com `prefers-reduced-motion: reduce`, o deslocamento some e fica só um fade curto.
+
+## Licença
+
+Código (HTML, CSS, JS, `lab/`, `demo/`, `codigo/`): [MIT](LICENSE). Textos, capturas de tela e imagens do portfólio: todos os direitos reservados. Bibliotecas de terceiros em `demo/nexo/vendor/` e as fontes em `assets/fonts/` (OFL) mantêm as próprias licenças.
