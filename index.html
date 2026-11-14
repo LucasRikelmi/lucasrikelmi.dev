@@ -131,6 +131,13 @@
         <span class="mono">Open source · npm 1.1.1</span>
       </div>
 
+      <figure class="gallery">
+        <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">candeia.lucasrikelmi.dev / exemplo</span></div>
+        <a class="shot-link" href="https://candeia.lucasrikelmi.dev/exemplo/" target="_blank" rel="noopener">
+          <img src="assets/img/candeia-demo.webp" width="1100" height="550" loading="lazy" decoding="async" alt="Demo do Candeia: formulário com cidade (Goiânia - GO), endereço (Rua 8, Qd 21 Lt 4), bairro e CEP opcionais e botão Localizar, ao lado de um mapa do Brasil">
+        </a>
+      </figure>
+
       <div class="metrics">
         <div class="metric metric-destaque"><b>74,5%</b><span>das respostas a até 100 m do ponto certo no benchmark sintético</span></div>
         <div class="metric"><b>~38%</b><span>sem número de porta: limitado pela extensão da rua, e o raio informa isso</span></div>
@@ -203,19 +210,17 @@
       </div>
 
       <div class="metrics">
-        <div class="metric metric-destaque"><b>+150h</b><span>de trabalho manual devolvidas à equipe em 6 meses</span></div>
+        <div class="metric metric-destaque"><b>+150h</b><span>de trabalho manual devolvidas à equipe em 6 meses (estimativa)</span></div>
         <div class="metric"><b>R$ 0</b><span>de servidor e hospedagem: roda no navegador da equipe</span></div>
         <div class="metric"><b>0</b><span>dados de clientes enviados para fora (LGPD)</span></div>
         <div class="metric"><b>5</b><span>tipos de documento gerados em lote, prontos para imprimir</span></div>
       </div>
 
-      <ul class="features">
+      <ul class="features duo">
         <li class="feat spot"><span class="mono">Segurança</span><h3>Cofre local cifrado</h3><p>A base fica no navegador comprimida e cifrada com <strong>AES-256-GCM</strong>; a chave nasce de uma senha via <strong>Argon2id</strong>. Bloqueio por inatividade, limite de tentativas e expiração automática.</p></li>
         <li class="feat spot"><span class="mono">Documentos</span><h3>Gerador próprio de documentos</h3><p>Convite, lembrete, comunicado formal, recibo em duas vias e termo LGPD, montados por blocos em jsPDF com texto vetorial. Um lote de 10 empresas sai em ~220 KB.</p></li>
         <li class="feat spot"><span class="mono">Geo</span><h3>Geocodificação offline</h3><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado. Depois virou uma biblioteca independente, o <a href="#p-candeia">Candeia</a>; a versão original roda <a href="#geocodificacao">ao vivo abaixo</a>.</p></li>
-        <li class="feat spot"><span class="mono">Contatos</span><h3>Cruzamento de contatos</h3><p>Normaliza telefones, e-mails e CNPJs e agrupa empresas ligadas ao mesmo representante, o que vira uma abordagem centralizada.</p></li>
         <li class="feat spot"><span class="mono">ETL</span><h3>CSV de milhões de linhas no browser</h3><p>Leitura em streaming com detecção de encoding e separador, filtro por município e geração de índice, sem Python e sem travar a aba.</p></li>
-        <li class="feat spot"><span class="mono">Gestão</span><h3>Dashboard e projeção de metas</h3><p>Indicadores, funil de atendimento, produtividade por técnico e curva realizado × previsto com calendário de dias úteis e feriados.</p></li>
       </ul>
 
       <div class="arch">

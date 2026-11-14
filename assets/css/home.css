@@ -100,6 +100,9 @@ h3 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.75rem, 3.4vw
 .shots { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
 .shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; opacity: 0; transform: scale(1.015); transition: opacity var(--dur-base) var(--ease-in-out), transform var(--dur-slow) var(--ease-out); }
 .shots img.on { opacity: 1; transform: none; }
+figure.gallery { margin-bottom: 0; }
+.shot-link { display: block; }
+.shot-link img { width: 100%; height: auto; }
 .tabs { display: flex; gap: .375rem; flex-wrap: wrap; margin-top: .875rem; }
 .tabs button { font: 500 .8125rem var(--mono); padding: .5rem .875rem; border-radius: 999px; cursor: pointer; background: transparent; color: var(--muted); border: 1px solid var(--line-ctl); transition: color .2s, border-color .2s; min-height: 2.75rem; }
 .tabs button:hover { color: var(--ink); border-color: var(--ink); }
@@ -130,6 +133,8 @@ h3 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.75rem, 3.4vw
 .feat a { color: var(--accent); text-underline-offset: .2em; }
 @media (max-width: 61em) { .features { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 38em) { .features { grid-template-columns: 1fr; } }
+/* 4 cartões: 2 × 2 em vez de 3 + 1 */
+@media (min-width: 38.01em) { .features.duo { grid-template-columns: 1fr 1fr; } }
 /* 2 colunas com número ímpar de cartões: o último ocupa a linha (sem órfão) */
 @media (min-width: 38.01em) and (max-width: 61em) { .features > :last-child:nth-child(odd) { grid-column: 1 / -1; } }
 
