@@ -23,7 +23,8 @@
 .menu-open .nav-toggle span { background: transparent; }
 .menu-open .nav-toggle span::before { transform: translateY(5px) rotate(45deg); }
 .menu-open .nav-toggle span::after { transform: translateY(-5px) rotate(-45deg); }
-@media (max-width: 48em) {
+/* 54em: abaixo disso menu + ícones + seletor de tema não cabem (medido: 769–860px estourava) */
+@media (max-width: 54em) {
   .nav-toggle { display: grid; }
   .menu { position: fixed; inset: 4rem 0 auto 0; flex-direction: column; align-items: stretch; gap: 0;
     background: var(--bg); border-bottom: 1px solid var(--line); padding: .5rem var(--gutter) 1.25rem;
@@ -127,6 +128,8 @@ h3 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.75rem, 3.4vw
 .feat a { color: var(--accent); text-underline-offset: .2em; }
 @media (max-width: 61em) { .features { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 38em) { .features { grid-template-columns: 1fr; } }
+/* 2 colunas com número ímpar de cartões: o último ocupa a linha (sem órfão) */
+@media (min-width: 38.01em) and (max-width: 61em) { .features > :last-child:nth-child(odd) { grid-column: 1 / -1; } }
 
 .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
 .layers { padding: 1.625rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-2); }
@@ -218,11 +221,11 @@ pre.code .k { color: #c9a8ff; } pre.code .s { color: #e6c07b; } pre.code .c { co
 .lab-card .p-actions { margin-top: 1.5rem; }
 @media (max-width: 56em) { .lab-card { grid-template-columns: 1fr; gap: 1.5rem; } }
 .lab-live { border-radius: var(--radius); background: var(--bg-2); border: 1px solid var(--line); padding: 1.25rem; display: grid; gap: .9rem; align-content: start; }
-.lab-live .row { display: grid; grid-template-columns: 6rem 1fr 6.5rem; gap: .6rem; align-items: center; font-size: .85rem; }
+.lab-live .row { display: grid; grid-template-columns: 2.75rem minmax(4rem, 1fr) auto; gap: .6rem; align-items: center; font-size: .85rem; }
 .lab-live .track { display: block; height: 1.6rem; border-radius: .5rem; background: var(--card); overflow: hidden; }
 .lab-live .fill { display: block; height: 100%; width: 100%; border-radius: inherit; transform: scaleX(var(--v, 0)); transform-origin: left; transition: transform 1.2s var(--ease-emph); }
 .lab-live .fill.cpu { background: var(--data); } .lab-live .fill.dma { background: var(--accent-fill); }
-.lab-live b { font: 500 .8rem var(--mono); text-align: right; }
+.lab-live b { font: 500 .8rem var(--mono); text-align: right; white-space: nowrap; }
 .lab-live .big { font: 400 clamp(2.5rem, 6vw, 4rem)/1 var(--serif); color: var(--accent); }
 .lab-live .cap { font-size: .82rem; color: var(--muted); }
 .lab-live .timeline { display: flex; gap: 2px; height: 1.25rem; }

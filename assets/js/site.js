@@ -65,7 +65,7 @@
     toggle.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
     menu.addEventListener("click", (e) => { if (e.target.closest("a")) set(false); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") set(false); });
-    matchMedia("(min-width: 48em)").addEventListener("change", (e) => { if (e.matches) set(false); });
+    matchMedia("(min-width: 54.01em)").addEventListener("change", (e) => { if (e.matches) set(false); });
   }
 
   // Holofote: atualiza --mx/--my do cartão sob o cursor (um listener só, com rAF).

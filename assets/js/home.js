@@ -8,12 +8,15 @@
     const tabs = [...list.querySelectorAll('[role="tab"]')];
     const url = g.querySelector(".url");
     const select = (i, focus) => {
+      if (imgs[i].dataset.src) { imgs[i].src = imgs[i].dataset.src; delete imgs[i].dataset.src; }
       imgs.forEach((im, j) => { im.classList.toggle("on", i === j); im.setAttribute("aria-hidden", String(i !== j)); });
       tabs.forEach((t, j) => { t.setAttribute("aria-selected", String(i === j)); t.tabIndex = i === j ? 0 : -1; });
       url.textContent = imgs[i].dataset.url;
       if (focus) tabs[i].focus();
     };
     tabs.forEach((t, i) => t.addEventListener("click", () => select(i)));
+    // pré-carrega a tela quando o dedo/cursor chega na aba (antes do clique)
+    tabs.forEach((t, i) => t.addEventListener("pointerenter", () => { const im = imgs[i]; if (im.dataset.src) { im.src = im.dataset.src; delete im.dataset.src; } }, { once: true }));
     list.addEventListener("keydown", (e) => {
       const i = tabs.indexOf(document.activeElement);
       if (i < 0) return;
