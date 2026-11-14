@@ -154,12 +154,12 @@
       </div>
 
       <ul class="features">
-        <li class="feat spot"><span class="mono">Segurança</span><h4>Cofre local cifrado</h4><p>A base fica no navegador comprimida e cifrada com <strong>AES-256-GCM</strong>; a chave nasce de uma senha via <strong>Argon2id</strong>. Bloqueio por inatividade, limite de tentativas e expiração automática.</p></li>
-        <li class="feat spot"><span class="mono">Documentos</span><h4>Gerador próprio de documentos</h4><p>Convite, lembrete, comunicado formal, recibo em duas vias e termo LGPD, montados por blocos em jsPDF com texto vetorial. Um lote de 10 empresas sai em ~220 KB.</p></li>
-        <li class="feat spot"><span class="mono">Geo</span><h4>Geocodificação 100% offline</h4><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado e devolve coordenada com nível de confiança. <a href="#geocodificacao">Teste ao vivo abaixo</a>.</p></li>
-        <li class="feat spot"><span class="mono">Contatos</span><h4>Cruzamento de contatos</h4><p>Normaliza telefones, e-mails e CNPJs e agrupa empresas ligadas ao mesmo representante, o que vira uma abordagem centralizada.</p></li>
-        <li class="feat spot"><span class="mono">ETL</span><h4>CSV de milhões de linhas no browser</h4><p>Leitura em streaming com detecção de encoding e separador, filtro por município e geração de índice, sem Python e sem travar a aba.</p></li>
-        <li class="feat spot"><span class="mono">Gestão</span><h4>Dashboard e projeção de metas</h4><p>Indicadores, funil de atendimento, produtividade por técnico e curva realizado × previsto com calendário de dias úteis e feriados.</p></li>
+        <li class="feat spot"><span class="mono">Segurança</span><h3>Cofre local cifrado</h3><p>A base fica no navegador comprimida e cifrada com <strong>AES-256-GCM</strong>; a chave nasce de uma senha via <strong>Argon2id</strong>. Bloqueio por inatividade, limite de tentativas e expiração automática.</p></li>
+        <li class="feat spot"><span class="mono">Documentos</span><h3>Gerador próprio de documentos</h3><p>Convite, lembrete, comunicado formal, recibo em duas vias e termo LGPD, montados por blocos em jsPDF com texto vetorial. Um lote de 10 empresas sai em ~220 KB.</p></li>
+        <li class="feat spot"><span class="mono">Geo</span><h3>Geocodificação 100% offline</h3><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado e devolve coordenada com nível de confiança. <a href="#geocodificacao">Teste ao vivo abaixo</a>.</p></li>
+        <li class="feat spot"><span class="mono">Contatos</span><h3>Cruzamento de contatos</h3><p>Normaliza telefones, e-mails e CNPJs e agrupa empresas ligadas ao mesmo representante, o que vira uma abordagem centralizada.</p></li>
+        <li class="feat spot"><span class="mono">ETL</span><h3>CSV de milhões de linhas no browser</h3><p>Leitura em streaming com detecção de encoding e separador, filtro por município e geração de índice, sem Python e sem travar a aba.</p></li>
+        <li class="feat spot"><span class="mono">Gestão</span><h3>Dashboard e projeção de metas</h3><p>Indicadores, funil de atendimento, produtividade por técnico e curva realizado × previsto com calendário de dias úteis e feriados.</p></li>
       </ul>
 
       <div class="arch">
@@ -285,7 +285,7 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
           <label>Bairro (opcional)<input name="bairro" value="Setor Central" spellcheck="false"></label>
           <label>CEP (opcional)<input name="cep" inputmode="numeric" spellcheck="false"></label>
         </form>
-        <div class="geo-ex" aria-label="Exemplos"></div>
+        <div class="geo-ex" role="group" aria-label="Exemplos"></div>
         <ol class="geo-steps" aria-live="polite"></ol>
       </div>
       <div class="geo-panel geo-mapwrap">
@@ -301,9 +301,9 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
     </div>
 
     <ul class="features" style="margin-top:1rem">
-      <li class="feat spot reveal"><span class="mono">Similaridade</span><h4>Jaro-Winkler + Jaccard, com guarda numérica</h4><p>“Rua 8” e “Rua 80” têm prefixo idêntico; uma regra de número terminal zera o score entre vias numeradas diferentes antes que o Jaro-Winkler as aproxime.</p></li>
-      <li class="feat spot reveal"><span class="mono">Desempenho</span><h4>Índice de bloqueio por token</h4><p>Só compara a consulta com vias que compartilham ao menos um token, com cache por município. A varredura completa fica só para erro de digitação em via de uma palavra.</p></li>
-      <li class="feat spot reveal"><span class="mono">Precisão</span><h4>Medoide em vez de centroide</h4><p>Quando não há número de porta, o ponto escolhido é um ponto real da rua (filtrado por bairro e quadra, sem outliers), nunca a média que pode cair no meio de uma quadra.</p></li>
+      <li class="feat spot reveal"><span class="mono">Similaridade</span><h3>Jaro-Winkler + Jaccard, com guarda numérica</h3><p>“Rua 8” e “Rua 80” têm prefixo idêntico; uma regra de número terminal zera o score entre vias numeradas diferentes antes que o Jaro-Winkler as aproxime.</p></li>
+      <li class="feat spot reveal"><span class="mono">Desempenho</span><h3>Índice de bloqueio por token</h3><p>Só compara a consulta com vias que compartilham ao menos um token, com cache por município. A varredura completa fica só para erro de digitação em via de uma palavra.</p></li>
+      <li class="feat spot reveal"><span class="mono">Precisão</span><h3>Medoide em vez de centroide</h3><p>Quando não há número de porta, o ponto escolhido é um ponto real da rua (filtrado por bairro e quadra, sem outliers), nunca a média que pode cair no meio de uma quadra.</p></li>
     </ul>
   </div>
 </section>
@@ -342,10 +342,10 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
   <div class="wrap">
     <div class="sec-head reveal"><h2>Ferramentas <em>do dia a dia</em></h2></div>
     <div class="stack reveal">
-      <div><h4>Front-end</h4><ul><li>JavaScript (ES2022)</li><li>HTML semântico · CSS</li><li>Chart.js · jsPDF · JSZip</li><li>Web Crypto API</li></ul></div>
-      <div><h4>Back-end</h4><ul><li>Java 17</li><li>Spring Boot · Spring Web</li><li>Spring Data JPA · Hibernate</li><li>Python (scripts e ETL)</li></ul></div>
-      <div><h4>Dados</h4><ul><li>PostgreSQL</li><li>IndexedDB · localStorage</li><li>CSV / ETL em streaming</li><li>KML · GeoJSON</li></ul></div>
-      <div><h4>Prática</h4><ul><li>Git e GitHub</li><li>Testes automatizados (JUnit, node:test)</li><li>Documentação técnica</li><li>Segurança e privacidade (LGPD)</li></ul></div>
+      <div><h3>Front-end</h3><ul><li>JavaScript (ES2022)</li><li>HTML semântico · CSS</li><li>Chart.js · jsPDF · JSZip</li><li>Web Crypto API</li></ul></div>
+      <div><h3>Back-end</h3><ul><li>Java 17</li><li>Spring Boot · Spring Web</li><li>Spring Data JPA · Hibernate</li><li>Python (scripts e ETL)</li></ul></div>
+      <div><h3>Dados</h3><ul><li>PostgreSQL</li><li>IndexedDB · localStorage</li><li>CSV / ETL em streaming</li><li>KML · GeoJSON</li></ul></div>
+      <div><h3>Prática</h3><ul><li>Git e GitHub</li><li>Testes automatizados (JUnit, node:test)</li><li>Documentação técnica</li><li>Segurança e privacidade (LGPD)</li></ul></div>
     </div>
   </div>
 </section>

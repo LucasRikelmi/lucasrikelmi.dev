@@ -120,7 +120,7 @@ h3 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.75rem, 3.4vw
 .feat { padding: 1.625rem; border-radius: var(--radius); background: var(--card); border: 1px solid var(--line); transition: transform var(--dur-base) var(--ease-out); }
 .feat:hover { transform: translateY(-3px); }
 .feat .mono { display: block; margin-bottom: .875rem; color: var(--accent); }
-.feat h4 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; margin-bottom: .5rem; line-height: 1.2; }
+.feat h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.01em; margin-bottom: .5rem; line-height: 1.2; }
 .feat p { font-size: .97rem; color: var(--muted); }
 .feat p strong { color: var(--ink); font-weight: 500; }
 .feat code { font-size: .82rem; color: var(--ink); }
@@ -164,8 +164,8 @@ pre.code .k { color: #c9a8ff; } pre.code .s { color: #e6c07b; } pre.code .c { co
 .geo-steps { list-style: none; display: grid; gap: .75rem; }
 .geo-steps > li { display: grid; grid-template-columns: 1.75rem 1fr; gap: .75rem; padding: .85rem; border-radius: .85rem; background: var(--card-2); border: 1px solid var(--line); }
 .geo-steps .n { width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; font: 500 .8rem var(--mono); background: var(--bg); border: 1px solid var(--line-2); }
-.geo-steps h4 { font-size: .9rem; font-weight: 700; margin-bottom: .35rem; }
-.geo-steps h4 small { font-weight: 400; color: var(--muted); font-size: .75rem; margin-left: .3rem; }
+.geo-steps h3 { font-size: .9rem; font-weight: 700; margin-bottom: .35rem; }
+.geo-steps h3 small { font-weight: 400; color: var(--muted); font-size: .75rem; margin-left: .3rem; }
 .geo-steps code { font-size: .82rem; word-break: break-word; }
 .ents { display: flex; flex-wrap: wrap; gap: .35rem; }
 .ent { font: .78rem var(--mono); padding: .2rem .5rem; border-radius: .4rem; background: var(--bg); border: 1px solid var(--line); }
@@ -232,7 +232,7 @@ pre.code .k { color: #c9a8ff; } pre.code .s { color: #e6c07b; } pre.code .c { co
 /* ── stack ── */
 .stack { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
 .stack > div { padding: 1.75rem 1.5rem 1.75rem 0; border-bottom: 1px solid var(--line); }
-.stack h4 { font-family: var(--serif); font-weight: 400; font-size: 1.875rem; margin-bottom: .875rem; }
+.stack h3 { font-family: var(--serif); font-weight: 400; font-size: 1.875rem; margin-bottom: .875rem; }
 .stack ul { list-style: none; }
 .stack li { color: var(--muted); padding: .2rem 0; font-size: 1rem; }
 @media (max-width: 56em) { .stack { grid-template-columns: 1fr 1fr; } }
