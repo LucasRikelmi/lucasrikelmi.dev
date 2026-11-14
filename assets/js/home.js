@@ -42,8 +42,8 @@
       document.getElementById("lab-cpu-v").textContent = fmt(c.cycle) + " ciclos";
       document.getElementById("lab-dma-v").textContent = fmt(d.cycle) + " ciclos";
       requestAnimationFrame(() => {
-        document.getElementById("lab-cpu").style.width = "100%";
-        document.getElementById("lab-dma").style.width = (100 * d.cycle / c.cycle).toFixed(1) + "%";
+        document.getElementById("lab-cpu").style.setProperty("--v", "1");
+        document.getElementById("lab-dma").style.setProperty("--v", (d.cycle / c.cycle).toFixed(3));
       });
       // linha do tempo do barramento (agrupada em 60 fatias)
       const N = 60, per = Math.ceil(d.cycle / N);

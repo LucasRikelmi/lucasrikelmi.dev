@@ -38,6 +38,16 @@
   --max: 77.5rem;
   --radius: 1.125rem;
   --ease: cubic-bezier(.2, .7, .1, 1);
+  /* Motion: 3 durações e 3 curvas. --ease-out: entrada e resposta a input (padrão).
+     --ease-in-out: troca de estado no lugar (aba, cor, tema). --ease-emph: só para
+     o que precisa chamar atenção (hero, pino do mapa). Nada passa de --dur-slow
+     fora do hero. */
+  --dur-fast: .16s;   /* cor, borda, hover */
+  --dur-base: .28s;   /* translate de botão, menu, crossfade */
+  --dur-slow: .6s;    /* reveal, pino, barras */
+  --ease-out: var(--ease);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-emph: cubic-bezier(.16, 1, .3, 1);
 }
 :root[data-theme="light"] { color-scheme: light; }
 
@@ -97,7 +107,7 @@ code, kbd, pre { font-family: var(--mono); }
 .theme-switch button {
   width: 2rem; height: 2rem; border-radius: 999px; border: 0; background: transparent;
   color: var(--muted); cursor: pointer; display: grid; place-items: center;
-  transition: background-color .2s, color .2s;
+  transition: background-color var(--dur-fast) var(--ease-in-out), color var(--dur-fast) var(--ease-in-out);
 }
 .theme-switch button:hover { color: var(--ink); }
 .theme-switch button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
@@ -108,12 +118,13 @@ code, kbd, pre { font-family: var(--mono); }
   display: inline-flex; align-items: center; gap: .625rem;
   padding: .8125rem 1.375rem; border-radius: 999px; text-decoration: none; cursor: pointer;
   font-weight: 500; font-size: .9375rem; border: 1px solid var(--line-ctl); background: var(--card);
-  transition: transform .25s var(--ease), background-color .2s, border-color .2s, box-shadow .25s;
+  transition: transform var(--dur-base) var(--ease-out), background-color var(--dur-fast) var(--ease-in-out), border-color var(--dur-fast) var(--ease-in-out), box-shadow var(--dur-base) var(--ease-out);
 }
 .btn:hover { transform: translateY(-2px); border-color: var(--ink); box-shadow: var(--shadow); }
+.btn:active { transform: translateY(0) scale(.98); transition-duration: 60ms; }
 .btn.primary { background: var(--accent-fill); color: var(--accent-ink); border-color: var(--accent-fill); }
 .btn.primary:hover { background: var(--accent-fill-2); border-color: var(--accent-fill-2); }
-.btn .arr { transition: transform .25s var(--ease); }
+.btn .arr { transition: transform var(--dur-base) var(--ease-out); }
 .btn:hover .arr { transform: translateX(3px); }
 .btn svg { width: 1.05em; height: 1.05em; }
 
@@ -123,7 +134,7 @@ code, kbd, pre { font-family: var(--mono); }
 .spot { position: relative; isolation: isolate; }
 .spot::before, .spot::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  opacity: 0; transition: opacity .35s;
+  opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
 }
 .spot::before {
   inset: -1px; padding: 1px; z-index: 2;
@@ -140,11 +151,13 @@ code, kbd, pre { font-family: var(--mono); }
 }
 
 /* ── Revelação ao rolar (só com JS; sem JS o conteúdo fica visível) ── */
-.js .reveal { opacity: 0; transform: translateY(1.5rem); transition: opacity .8s ease, transform .8s var(--ease); }
+.js .reveal { opacity: 0; transform: translateY(1rem); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); transition-delay: calc(var(--i, 0) * 60ms); }
 .js .reveal.in { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-  .js .reveal { opacity: 1; transform: none; }
+  /* reduzir, não zerar: o reveal vira só fade curto, sem deslocamento */
+  .js .reveal { transform: none; }
+  .js .reveal, .js .reveal.in { transition: opacity .2s linear !important; transition-delay: 0s !important; }
 }

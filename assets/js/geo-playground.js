@@ -43,7 +43,10 @@
       return;
     }
     G = window.GeoCore; T = window.GeoTown;
+    // Cede a thread entre as etapas: o boot inteiro numa tarefa só passava de 100 ms com CPU 4x.
+    const ceder = () => new Promise((r) => setTimeout(r));
     ({ idx, quadras } = T.build());
+    await ceder();
     keys = Object.keys(idx[T.COD]);
     opts = {
       blocking: G.construirBlockingIndex(idx),
@@ -53,7 +56,9 @@
       centroideMunicipio: G.centroide(keys.flatMap((k) => idx[T.COD][k])),
     };
     opts.cepBairroIndex = G.construirIndiceCepBairro(idx, opts.cepIndex);
+    await ceder();
     drawMap();
+    await ceder();
     $(".geo-ex").innerHTML = EXAMPLES.map((x, i) => `<button type="button" class="chip" data-i="${i}">${esc(x.e)}</button>`).join("");
     $(".geo-ex").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
@@ -122,7 +127,7 @@
     const ent = [["tipo", q.tipo], ["via", q.via], ["quadra", q.quadra], ["lote", q.lote], ["número", q.numero], ["km", q.km], ["cruzamento", q.viaCruzamento]]
       .map(([k, v]) => `<span class="ent${v == null ? " nil" : ""}"><i>${k}</i>${v == null ? "—" : esc(v)}</span>`).join("");
     const gate = (v) => `<span class="gate" style="left:${v * 100}%"></span>`;
-    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" style="width:${(x.s * 100).toFixed(0)}%"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
+    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" data-v="${x.s.toFixed(3)}"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
     $(".geo-steps").innerHTML = `
       <li><span class="n">1</span><div><h4>Normalização</h4><code>${esc(norm || "—")}</code></div></li>
       <li><span class="n">2</span><div><h4>Entidades extraídas</h4><div class="ents">${ent}</div></div></li>
@@ -131,6 +136,8 @@
         <p class="badge"><b>${st.label}</b> ${st.note}</p>
         <p class="why">${esc(r.motivo)}</p>
         <p class="meta mono">${r.candidatosNaRua || 0} ponto(s) candidatos · ${ms < 1 ? "<1" : ms.toFixed(1)} ms no seu navegador</p></div></li>`;
+    // barras: entram de 0 até o score (transform, sem layout)
+    requestAnimationFrame(() => $(".geo-steps").querySelectorAll(".fl").forEach((f) => f.style.setProperty("--v", f.dataset.v)));
   }
 
   function renderMap(r) {
