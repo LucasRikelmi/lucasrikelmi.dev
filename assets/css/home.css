@@ -33,6 +33,7 @@
   .menu a::after { display: none; }
   .menu-open .menu { opacity: 1; transform: none; visibility: visible; }
   .nav-tools .theme-switch button { width: 1.85rem; height: 1.85rem; }
+  .nav-tools .theme-switch:empty { width: calc(3 * 1.85rem + 2 * .125rem); height: 1.85rem; }
 }
 @media (max-width: 26em) { .gh { display: none; } }
 
@@ -215,6 +216,9 @@ pre.code .k { color: #c9a8ff; } pre.code .s { color: #e6c07b; } pre.code .c { co
 @keyframes dropin { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
 .geo-legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; margin-top: .75rem; list-style: none; font-size: .78rem; color: var(--muted); }
 .geo-legend i { display: inline-block; width: .65rem; height: .65rem; border-radius: 50%; margin-right: .35rem; vertical-align: -.05rem; }
+/* reserva a altura aproximada dos 4 passos enquanto o motor carrega (evita CLS) */
+.geo:not(.ready) .geo-steps { min-height: 28rem; }
+html:not(.js) .geo-ex { display: none; }
 .geo:not(.ready) .geo-steps:empty::before { content: "carregando o motor…"; color: var(--muted); font-size: .9rem; }
 
 /* ── laboratório ── */

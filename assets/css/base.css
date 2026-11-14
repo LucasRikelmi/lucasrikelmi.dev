@@ -103,6 +103,8 @@ code, kbd, pre { font-family: var(--mono); }
   display: inline-flex; padding: .1875rem; gap: .125rem; border-radius: 999px;
   border: 1px solid var(--line); background: var(--card);
 }
+/* reserva o espaço dos 3 botões antes do site.js preencher (evita deslocar a nav) */
+.theme-switch:empty { box-sizing: content-box; width: calc(3 * 2rem + 2 * .125rem); height: 2rem; }
 .theme-switch button {
   width: 2rem; height: 2rem; border-radius: 999px; border: 0; background: transparent;
   color: var(--muted); cursor: pointer; display: grid; place-items: center;

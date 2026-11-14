@@ -43,10 +43,7 @@
       return;
     }
     G = window.GeoCore; T = window.GeoTown;
-    // Cede a thread entre as etapas: o boot inteiro numa tarefa só passava de 100 ms com CPU 4x.
-    const ceder = () => new Promise((r) => setTimeout(r));
     ({ idx, quadras } = T.build());
-    await ceder();
     keys = Object.keys(idx[T.COD]);
     opts = {
       blocking: G.construirBlockingIndex(idx),
@@ -56,10 +53,8 @@
       centroideMunicipio: G.centroide(keys.flatMap((k) => idx[T.COD][k])),
     };
     opts.cepBairroIndex = G.construirIndiceCepBairro(idx, opts.cepIndex);
-    await ceder();
     drawMap();
-    await ceder();
-    $(".geo-ex").innerHTML = EXAMPLES.map((x, i) => `<button type="button" class="chip" data-i="${i}">${esc(x.e)}</button>`).join("");
+    // Os botões de exemplo já vêm no HTML (sem deslocar a página quando o motor carrega).
     $(".geo-ex").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       const x = EXAMPLES[+b.dataset.i];
