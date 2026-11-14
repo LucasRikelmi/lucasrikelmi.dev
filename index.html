@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucas Rikelmi | Desenvolvedor</title>
+<meta name="description" content="Lucas Rikelmi, desenvolvedor em Goiás: sistemas web que funcionam offline no navegador, geocodificação de endereços e APIs REST em Java/Spring. Veja projetos e demos.">
+<meta name="author" content="Lucas Rikelmi">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://lucasrikelmi.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lucas Rikelmi">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://lucasrikelmi.dev/">
+<meta property="og:title" content="Lucas Rikelmi | Desenvolvedor">
+<meta property="og:description" content="Software que resolve operação: sistemas no navegador com criptografia e geocodificação offline, e APIs REST em Java/Spring.">
+<meta property="og:image" content="https://lucasrikelmi.dev/assets/img/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lucas Rikelmi, desenvolvedor: Software que resolve operação.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lucas Rikelmi | Desenvolvedor">
+<meta name="twitter:description" content="Software que resolve operação: sistemas no navegador com criptografia e geocodificação offline, e APIs REST em Java/Spring.">
+<meta name="twitter:image" content="https://lucasrikelmi.dev/assets/img/og.png">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f8fa" data-default="#f7f8fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e12" data-default="#0b0e12">
+<script>
+  // Aplica o tema salvo antes da primeira pintura (sem "flash" do tema errado).
+  (function () {
+    var r = document.documentElement; r.classList.add("js");
+    try { var t = localStorage.getItem("tema"); if (t === "light" || t === "dark") r.dataset.theme = t; } catch (e) {}
+  })();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Lucas Rikelmi",
+  "url": "https://lucasrikelmi.dev",
+  "jobTitle": "Desenvolvedor",
+  "email": "mailto:lucas@lucasrikelmi.dev",
+  "address": { "@type": "PostalAddress", "addressLocality": "Aparecida de Goiânia", "addressRegion": "GO", "addressCountry": "BR" },
+  "sameAs": ["https://www.linkedin.com/in/lucasrikelmi", "https://github.com/LucasRikelmi"],
+  "knowsAbout": ["JavaScript", "Java", "Spring Boot", "PostgreSQL", "Geocodificação", "Web Crypto"]
+}
+</script>
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/assets/img/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="/assets/img/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="assets/fonts/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-grotesque-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
+</head>
+<body>
+<a class="skip" href="#projetos">Pular para o conteúdo</a>
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap nav-in">
+    <a class="brand" href="#topo">Lucas<em>.</em>Rikelmi</a>
+    <ul class="menu" id="menu">
+      <li><a href="#projetos">Projetos</a></li>
+      <li><a href="#geocodificacao">Geocodificação</a></li>
+      <li><a href="#laboratorio">Laboratório</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <div class="nav-tools">
+      <a class="gh" href="https://www.linkedin.com/in/lucasrikelmi" target="_blank" rel="noopener" aria-label="LinkedIn de Lucas Rikelmi">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a class="gh" href="https://github.com/LucasRikelmi" target="_blank" rel="noopener" aria-label="GitHub de Lucas Rikelmi">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+      </a>
+      <div class="theme-switch"></div>
+      <button class="nav-toggle" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="topo" data-glow>
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="status mono"><span class="dot"></span> Aberto a vagas e projetos freelance</div>
+    <h1>
+      <span class="line"><span>Software que</span></span>
+      <span class="line"><span>resolve <em>operação.</em></span></span>
+    </h1>
+    <div class="hero-grid">
+      <p>Sou <strong>Lucas Rikelmi</strong>, desenvolvedor que transforma rotina de campo em sistema: de <strong>apps que rodam inteiros no navegador, com criptografia e geocodificação offline</strong>, a <strong>APIs REST em Java/Spring</strong>.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projetos">Ver projetos <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn" href="#geocodificacao">Testar o geocodificador</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>AES-256-GCM + Argon2id</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
+    <span>AES-256-GCM + Argon2id</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
+  </div>
+</div>
+
+<main>
+<section id="projetos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Projetos <em>selecionados</em></h2>
+      <span class="mono">02 estudos de caso · demos navegáveis</span>
+    </div>
+
+    <!-- ───────────── NEXO ───────────── -->
+    <article class="project reveal" aria-labelledby="p-nexo">
+      <div class="p-top">
+        <div class="p-num" aria-hidden="true">01</div>
+        <div>
+          <h3 id="p-nexo">NEXO: gestão de operações de campo</h3>
+          <p class="lede">Plataforma para equipes que acompanham centenas de empresas em campo: importa bases, gera cartas e recibos em PDF, localiza endereços no mapa, cruza contatos e projeta metas, tudo <strong>dentro do navegador</strong>, sem servidor e sem enviar nenhum dado para fora.</p>
+          <ul class="tags">
+            <li class="tag">JavaScript modular</li><li class="tag">Web Crypto</li><li class="tag">Argon2id</li><li class="tag">jsPDF</li><li class="tag">Chart.js</li><li class="tag">KML</li>
+          </ul>
+        </div>
+        <span class="mono">Em produção</span>
+      </div>
+
+      <div class="gallery" data-gallery>
+        <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">nexo / dashboard</span></div>
+        <div class="shots">
+          <img class="on" id="nx-0" src="assets/img/nexo-dashboard.webp" width="1600" height="1000" alt="Dashboard do NEXO com indicadores e produtividade por técnico" data-url="nexo / dashboard">
+          <img id="nx-1" src="assets/img/nexo-controle.webp" width="1600" height="1000" alt="Grade operacional do NEXO com filtros e status" loading="lazy" data-url="nexo / controle" aria-hidden="true">
+          <img id="nx-2" src="assets/img/nexo-planejamento.webp" width="1600" height="1000" alt="Planejamento com curva realizado × previsto" loading="lazy" data-url="nexo / planejamento" aria-hidden="true">
+          <img id="nx-3" src="assets/img/nexo-sincronizacao.webp" width="1600" height="1000" alt="Sincronização das bases de dados" loading="lazy" data-url="nexo / sincronizacao" aria-hidden="true">
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Telas do NEXO">
+        <button role="tab" aria-selected="true" aria-controls="nx-0">Dashboard</button>
+        <button role="tab" aria-selected="false" aria-controls="nx-1" tabindex="-1">Controle</button>
+        <button role="tab" aria-selected="false" aria-controls="nx-2" tabindex="-1">Planejamento</button>
+        <button role="tab" aria-selected="false" aria-controls="nx-3" tabindex="-1">Sincronização</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric metric-destaque"><b>+150h</b><span>de trabalho manual devolvidas à equipe em 6 meses</span></div>
+        <div class="metric"><b>R$ 0</b><span>de servidor e hospedagem: roda no navegador da equipe</span></div>
+        <div class="metric"><b>0</b><span>dados de clientes enviados para fora (LGPD)</span></div>
+        <div class="metric"><b>5</b><span>tipos de documento gerados em lote, prontos para imprimir</span></div>
+      </div>
+
+      <ul class="features">
+        <li class="feat spot"><span class="mono">Segurança</span><h4>Cofre local cifrado</h4><p>A base fica no navegador comprimida e cifrada com <strong>AES-256-GCM</strong>; a chave nasce de uma senha via <strong>Argon2id</strong>. Bloqueio por inatividade, limite de tentativas e expiração automática.</p></li>
+        <li class="feat spot"><span class="mono">Documentos</span><h4>Gerador próprio de documentos</h4><p>Convite, lembrete, comunicado formal, recibo em duas vias e termo LGPD, montados por blocos em jsPDF com texto vetorial. Um lote de 10 empresas sai em ~220 KB.</p></li>
+        <li class="feat spot"><span class="mono">Geo</span><h4>Geocodificação 100% offline</h4><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado e devolve coordenada com nível de confiança. <a href="#geocodificacao">Teste ao vivo abaixo</a>.</p></li>
+        <li class="feat spot"><span class="mono">Contatos</span><h4>Cruzamento de contatos</h4><p>Normaliza telefones, e-mails e CNPJs e agrupa empresas ligadas ao mesmo representante, o que vira uma abordagem centralizada.</p></li>
+        <li class="feat spot"><span class="mono">ETL</span><h4>CSV de milhões de linhas no browser</h4><p>Leitura em streaming com detecção de encoding e separador, filtro por município e geração de índice, sem Python e sem travar a aba.</p></li>
+        <li class="feat spot"><span class="mono">Gestão</span><h4>Dashboard e projeção de metas</h4><p>Indicadores, funil de atendimento, produtividade por técnico e curva realizado × previsto com calendário de dias úteis e feriados.</p></li>
+      </ul>
+
+      <div class="arch">
+        <div class="layers">
+          <span class="mono" style="display:block;margin-bottom:.75rem">Arquitetura em camadas</span>
+          <div class="layer"><span class="mono">Arquivo</span><span>FileProcessor · ContratosArquivo: lê CSV, não conhece regra de negócio</span></div>
+          <div class="layer"><span class="mono">Persistência</span><span>StorageManager · CryptoManager: blocos comprimidos e cifrados</span></div>
+          <div class="layer"><span class="mono">Negócio</span><span>MotorRegras: puro, sem DOM e sem I/O</span></div>
+          <div class="layer"><span class="mono">Motores</span><span>PdfEngine · MapEngine/GeoCore · CruzEngine</span></div>
+          <div class="layer"><span class="mono">UI</span><span>5 telas, tema claro/escuro, tour guiado</span></div>
+        </div>
+<pre class="code" tabindex="0" aria-label="Trecho de código: derivação de chave com Argon2id"><span class="c">// Chave derivada da senha → nunca sai da memória</span>
+<span class="k">async</span> <span class="a">_derivarChaveArgon2id</span>(senha, salt) {
+  <span class="k">const</span> bytes = <span class="k">await</span> hashwasm.argon2id({
+    password: senha, salt,
+    iterations: <span class="k">this</span>._ARGON2_ITERACOES,
+    memorySize: <span class="k">this</span>._ARGON2_MEMORIA_KIB,
+    hashLength: <span class="s">32</span>, outputType: <span class="s">"binary"</span>,
+  });
+  <span class="k">return</span> crypto.subtle.importKey(
+    <span class="s">"raw"</span>, bytes, { name: <span class="s">"AES-GCM"</span> },
+    <span class="k">true</span>, [<span class="s">"encrypt"</span>, <span class="s">"decrypt"</span>]);
+}</pre>
+      </div>
+
+      <div class="p-actions">
+        <a class="btn primary" href="demo/nexo/index.html">Abrir demo do NEXO <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn" href="demo/nexo/controle.html">Ir direto para o Controle</a>
+      </div>
+      <p class="note">Demonstração com cenário fictício de gestão de fornecedores: empresas, pessoas, endereços e documentos são inventados. A criptografia continua ativa, só o diálogo de senha é pulado.</p>
+    </article>
+
+    <!-- ───────────── LOCADORA ───────────── -->
+    <article class="project reveal" aria-labelledby="p-loc">
+      <div class="p-top">
+        <div class="p-num" aria-hidden="true">02</div>
+        <div>
+          <h3 id="p-loc">Locadora: gestão de frota de ponta a ponta</h3>
+          <p class="lede">Sistema completo para locadoras de veículos: cadastro da frota, clientes, contratos, devolução com registro de avarias e pagamento, num fluxo só. Backend em <strong>Java 17 + Spring Boot 3</strong> com <strong>PostgreSQL</strong>, pronto para conectar a um app ou site, e painel web próprio.</p>
+          <ul class="tags">
+            <li class="tag">Java 17</li><li class="tag">Spring Boot 3.4</li><li class="tag">Spring Data JPA</li><li class="tag">PostgreSQL</li><li class="tag">REST</li><li class="tag">JUnit 5 · H2</li>
+          </ul>
+        </div>
+        <span class="mono">Projeto acadêmico</span>
+      </div>
+
+      <div class="gallery" data-gallery>
+        <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span class="url">locadora / dashboard</span></div>
+        <div class="shots">
+          <img class="on" id="lc-0" src="assets/img/loc-index.webp" width="1600" height="1000" alt="Dashboard da Locadora com frota e receita" loading="lazy" data-url="locadora / dashboard">
+          <img id="lc-1" src="assets/img/loc-locacao.webp" width="1600" height="1000" alt="Fluxo de nova locação e devolução" loading="lazy" data-url="locadora / locacao" aria-hidden="true">
+          <img id="lc-2" src="assets/img/loc-frota.webp" width="1600" height="1000" alt="Cadastro de marcas, modelos e categorias" loading="lazy" data-url="locadora / frota" aria-hidden="true">
+          <img id="lc-3" src="assets/img/loc-contrato.webp" width="1600" height="1000" alt="Lista de contratos" loading="lazy" data-url="locadora / contratos" aria-hidden="true">
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Telas da Locadora">
+        <button role="tab" aria-selected="true" aria-controls="lc-0">Dashboard</button>
+        <button role="tab" aria-selected="false" aria-controls="lc-1" tabindex="-1">Locação</button>
+        <button role="tab" aria-selected="false" aria-controls="lc-2" tabindex="-1">Frota</button>
+        <button role="tab" aria-selected="false" aria-controls="lc-3" tabindex="-1">Contratos</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric metric-destaque"><b>8 → 1</b><span>pedidos simultâneos pelo mesmo carro viram um único contrato</span></div>
+        <div class="metric"><b>13</b><span>entidades cobrindo frota, clientes, contratos, avarias e pagamentos</span></div>
+        <div class="metric"><b>8</b><span>módulos de API REST prontos para integrar com app ou site</span></div>
+        <div class="metric"><b>5</b><span>testes automáticos que validam as regras a cada alteração</span></div>
+      </div>
+
+      <div class="arch">
+<pre class="code" tabindex="0" aria-label="Trecho de código: trava pessimista e cálculo de preço"><span class="c">// Dois atendentes reservando o mesmo carro no mesmo instante:</span>
+<span class="c">// SELECT ... FOR UPDATE garante que só um contrato seja fechado.</span>
+<span class="a">@Lock</span>(LockModeType.<span class="a">PESSIMISTIC_WRITE</span>)
+<span class="a">@Query</span>(<span class="s">"select v from Veiculo v where v.id = :id"</span>)
+Optional&lt;Veiculo&gt; findByIdParaAtualizacao(<span class="a">@Param</span>(<span class="s">"id"</span>) Long id);
+
+<span class="c">// ContratoService.abrir</span>
+<span class="k">if</span> (veiculo.getStatus() != StatusVeiculo.<span class="a">DISPONIVEL</span>) {
+  <span class="k">throw</span> RegraNegocioException.conflito(<span class="s">"Veículo não está disponível"</span>); <span class="c">// 409</span>
+}
+<span class="c">// preço calculado no servidor, em BigDecimal: diárias × valor da categoria</span>
+BigDecimal valor = categoria.getValorDiaria()
+    .multiply(BigDecimal.valueOf(calcularDiarias(locacao)))
+    .setScale(<span class="s">2</span>, RoundingMode.<span class="a">HALF_EVEN</span>);
+veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
+        <div class="layers">
+          <span class="mono" style="display:block;margin-bottom:.75rem">Modelo de domínio</span>
+          <div class="layer"><span class="mono">Frota</span><span>Marca → Modelo → Categoria (diária) → Veículo · Manutenção</span></div>
+          <div class="layer"><span class="mono">Pessoas</span><span>Cliente e Usuário com Contato/Endereço em <code>@OneToOne</code> cascade</span></div>
+          <div class="layer"><span class="mono">Contrato</span><span>ContratoLocacao 1:N Locação 1:N Ocorrência · 1:1 Pagamento</span></div>
+          <div class="layer"><span class="mono">Reserva segura</span><span>Trava pessimista no veículo e no contrato + <code>@Version</code> como segunda barreira, validadas com 8 pedidos simultâneos</span></div>
+          <div class="layer"><span class="mono">Valores</span><span>Precisão decimal (<code>BigDecimal</code>) em todo valor; o preço é sempre calculado no servidor</span></div>
+          <div class="layer"><span class="mono">Acesso</span><span>Senhas guardadas com hash BCrypt; nenhuma senha volta para o navegador</span></div>
+          <div class="layer"><span class="mono">Regras</span><span>Devolução de todos os veículos do contrato, KM que não regride, erros padronizados</span></div>
+        </div>
+      </div>
+
+      <div class="p-actions">
+        <a class="btn primary" href="demo/locadora/login.html">Abrir demo da Locadora <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn" href="demo/locadora/locacao.html">Ver o teste de concorrência</a>
+        <a class="btn" href="https://github.com/LucasRikelmi/lucasrikelmi.dev/tree/main/codigo/locadora-api" target="_blank" rel="noopener">Código no GitHub</a>
+      </div>
+      <p class="note">Na demo, as chamadas para <code>localhost:8080</code> são atendidas por uma API simulada no navegador que reproduz as regras do backend Java. Na tela de Locações há um painel que dispara 5 pedidos simultâneos para o mesmo carro, com e sem a trava. Login pré-preenchido: <code>demo</code> / <code>demo123</code>.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ───────────── GEOCODIFICAÇÃO ───────────── -->
+<section id="geocodificacao" class="alt">
+  <div class="wrap">
+    <div class="geo-intro reveal">
+      <div>
+        <span class="mono">Em destaque · motor do NEXO</span>
+        <h2 style="margin-top:1rem">Do endereço digitado <em>ao ponto no mapa</em></h2>
+      </div>
+      <p>Endereço de cadastro no Brasil chega como <strong>“RUA OITO QD 21 LT 4”</strong>, <strong>“Av Brazil 340”</strong> ou <strong>“esquina com a Goiás”</strong>. O motor normaliza, extrai quadra, lote, número e km, acha a via por similaridade e devolve a coordenada <strong>com um nível de confiança honesto</strong>, sem chamar nenhuma API. Abaixo roda o mesmo <code>geo_core.js</code> do sistema, sobre uma cidade fictícia.</p>
+    </div>
+
+    <div class="geo reveal" id="geo-play">
+      <div class="geo-panel">
+        <form autocomplete="off">
+          <label class="full">Endereço<input name="endereco" value="Rua Oito, Qd. 21 Lt. 4" spellcheck="false"></label>
+          <label>Bairro (opcional)<input name="bairro" value="Setor Central" spellcheck="false"></label>
+          <label>CEP (opcional)<input name="cep" inputmode="numeric" spellcheck="false"></label>
+        </form>
+        <div class="geo-ex" aria-label="Exemplos"></div>
+        <ol class="geo-steps" aria-live="polite"></ol>
+      </div>
+      <div class="geo-panel geo-mapwrap">
+        <svg class="geo-map" viewBox="-250 -470 1580 1420" role="img" aria-label="Mapa da cidade fictícia com o resultado da geocodificação"></svg>
+        <ul class="geo-legend">
+          <li><i style="background:var(--ok)"></i>exato</li>
+          <li><i style="background:var(--data)"></i>bom</li>
+          <li><i style="background:var(--warn)"></i>aproximado</li>
+          <li><i style="background:var(--orange)"></i>duvidoso</li>
+          <li><i style="background:var(--err)"></i>não encontrado</li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="features" style="margin-top:1rem">
+      <li class="feat spot reveal"><span class="mono">Similaridade</span><h4>Jaro-Winkler + Jaccard, com guarda numérica</h4><p>“Rua 8” e “Rua 80” têm prefixo idêntico; uma regra de número terminal zera o score entre vias numeradas diferentes antes que o Jaro-Winkler as aproxime.</p></li>
+      <li class="feat spot reveal"><span class="mono">Desempenho</span><h4>Índice de bloqueio por token</h4><p>Só compara a consulta com vias que compartilham ao menos um token, com cache por município. A varredura completa fica só para erro de digitação em via de uma palavra.</p></li>
+      <li class="feat spot reveal"><span class="mono">Precisão</span><h4>Medoide em vez de centroide</h4><p>Quando não há número de porta, o ponto escolhido é um ponto real da rua (filtrado por bairro e quadra, sem outliers), nunca a média que pode cair no meio de uma quadra.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ───────────── LABORATÓRIO ───────────── -->
+<section id="laboratorio">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>Laboratório <em>de fundamentos</em></h2>
+      <span class="mono">o que acontece abaixo do framework</span>
+    </div>
+    <article class="lab-card spot reveal">
+      <div>
+        <span class="mono">Arquitetura de computadores · simulador</span>
+        <h3>Um computador inteiro, ciclo a ciclo</h3>
+        <p>CPU RISC-V (subconjunto do RV32I) com cache L1, barramento arbitrado, <strong>DMA em rajada</strong>, controlador de interrupções e periféricos mapeados em memória. Nasceu como planilha Excel/VBA num seminário da faculdade; a versão web tem núcleo testado separado da interface e mede cada ciclo, inclusive a disputa pelo barramento.</p>
+        <div class="p-actions">
+          <a class="btn primary" href="lab/cpu/">Abrir o simulador <span class="arr" aria-hidden="true">→</span></a>
+          <a class="btn" href="lab/cpu/#sobre">Como o modelo funciona</a>
+        </div>
+      </div>
+      <div class="lab-live" id="lab-live" aria-live="polite">
+        <span class="mono">Medido agora, no seu navegador</span>
+        <div class="big" id="lab-speed">—</div>
+        <p class="cap">mais rápido copiar 256 bytes com DMA do que com LW/SW na CPU, contando configuração e interrupção.</p>
+        <div class="row"><span>CPU</span><span class="track"><span class="fill cpu" id="lab-cpu"></span></span><b id="lab-cpu-v">—</b></div>
+        <div class="row"><span>DMA</span><span class="track"><span class="fill dma" id="lab-dma"></span></span><b id="lab-dma-v">—</b></div>
+        <span class="mono">Barramento durante a cópia por DMA</span>
+        <div class="timeline" id="lab-tl"></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="stack" class="alt">
+  <div class="wrap">
+    <div class="sec-head reveal"><h2>Ferramentas <em>do dia a dia</em></h2></div>
+    <div class="stack reveal">
+      <div><h4>Front-end</h4><ul><li>JavaScript (ES2022)</li><li>HTML semântico · CSS</li><li>Chart.js · jsPDF · JSZip</li><li>Web Crypto API</li></ul></div>
+      <div><h4>Back-end</h4><ul><li>Java 17</li><li>Spring Boot · Spring Web</li><li>Spring Data JPA · Hibernate</li><li>Python (scripts e ETL)</li></ul></div>
+      <div><h4>Dados</h4><ul><li>PostgreSQL</li><li>IndexedDB · localStorage</li><li>CSV / ETL em streaming</li><li>KML · GeoJSON</li></ul></div>
+      <div><h4>Prática</h4><ul><li>Git e GitHub</li><li>Testes automatizados (JUnit, node:test)</li><li>Documentação técnica</li><li>Segurança e privacidade (LGPD)</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="wrap about">
+    <div class="reveal">
+      <h2>Do problema <em>real</em> ao sistema</h2>
+    </div>
+    <div class="reveal">
+      <p>Meus melhores projetos nasceram dentro da operação: planilhas que viravam retrabalho, cartas montadas uma a uma, endereços procurados no mapa um por um. <strong>Eu observo o fluxo, desenho a solução e entrego algo que a equipe usa no dia seguinte.</strong></p>
+      <ol class="timeline-cv" aria-label="Trajetória">
+        <li><span class="mono">2024 →</span><div><b>IBGE · Agente de Pesquisas e Mapeamento</b><span>Coleta e mapeamento de dados em campo para pesquisas oficiais.</span></div></li>
+        <li><span class="mono">2024 → 2028</span><div><b>Ciência da Computação · PUC Goiás</b><span>Bacharelado em andamento. Hackathon IV CodeCraft (2026) e competições de segurança (CTF).</span></div></li>
+        <li><span class="mono">2023 → 2024</span><div><b>UNIFAN · Patrimônio</b><span>Inventário patrimonial e planilhas de consulta usadas como sistema interno de busca.</span></div></li>
+        <li><span class="mono">2021 → 2023</span><div><b>Rede Click Cursos · Instrutor e suporte técnico</b><span>De estagiário a referência técnica da unidade: Windows Server, laboratório e relatórios automatizados com VBA.</span></div></li>
+      </ol>
+      <ol class="principles">
+        <li><div><b>Privacidade por padrão</b><span>Dado sensível não sai da máquina; quando precisa ficar salvo, fica cifrado.</span></div></li>
+        <li><div><b>Funciona sem internet</b><span>Bibliotecas e fontes servidas localmente, sem build e sem depender de CDN.</span></div></li>
+        <li><div><b>Camadas bem separadas</b><span>Leitura de arquivo, regra de negócio e interface não se misturam.</span></div></li>
+        <li><div><b>Medido, não estimado</b><span>Número que aparece aqui sai de teste ou de uso real, e o código está aberto para conferir.</span></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="contato" class="contact">
+  <div class="wrap reveal">
+    <span class="mono">Vamos conversar</span>
+    <h2>Tem uma operação <em>pra destravar?</em></h2>
+    <p class="contact-lede">Vaga, projeto freelance ou consultoria: me conte o problema e eu respondo em até 1 dia útil.</p>
+    <div class="cta">
+      <a class="btn primary" href="mailto:lucas@lucasrikelmi.dev?subject=Contato%20pelo%20portf%C3%B3lio">E-mail <span class="arr" aria-hidden="true">→</span></a>
+      <a class="btn" href="https://wa.me/5562982420630?text=Ol%C3%A1%2C%20Lucas!%20Vi%20seu%20portf%C3%B3lio%20e%20quero%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn" href="https://www.linkedin.com/in/lucasrikelmi" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/LucasRikelmi" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="mono contact-info">lucas@lucasrikelmi.dev · Aparecida de Goiânia, GO · atendo remoto</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-in mono">
+    <span>© 2026 Lucas Rikelmi · Aparecida de Goiânia, GO</span>
+    <a href="https://github.com/LucasRikelmi/lucasrikelmi.dev" target="_blank" rel="noopener">Código-fonte deste site no GitHub</a>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/home.js" defer></script>
+<script src="assets/js/geo-playground.js" defer></script>
+</body>
+</html>

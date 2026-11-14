@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador RV32 | Lucas Rikelmi</title>
+<meta name="description" content="Simulador ciclo a ciclo de um sistema RV32I no navegador: CPU, cache L1, barramento arbitrado, DMA em rajada, controlador de interrupções e dispositivos mapeados em memória.">
+<link rel="canonical" href="https://lucasrikelmi.dev/lab/cpu/">
+<meta name="author" content="Lucas Rikelmi">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lucas Rikelmi">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://lucasrikelmi.dev/lab/cpu/">
+<meta property="og:title" content="Simulador RV32 | Lucas Rikelmi">
+<meta property="og:description" content="CPU, cache, barramento, DMA e interrupções simulados ciclo a ciclo no navegador, com visualização ao vivo.">
+<meta property="og:image" content="https://lucasrikelmi.dev/assets/img/og-lab.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Simulador RV32: CPU, cache L1, barramento, DMA e interrupções ciclo a ciclo.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Simulador RV32 | Lucas Rikelmi">
+<meta name="twitter:description" content="CPU, cache, barramento, DMA e interrupções simulados ciclo a ciclo no navegador, com visualização ao vivo.">
+<meta name="twitter:image" content="https://lucasrikelmi.dev/assets/img/og-lab.png">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f8fa" data-default="#f7f8fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e12" data-default="#0b0e12">
+<script>
+  (function () {
+    var r = document.documentElement; r.classList.add("js");
+    try { var t = localStorage.getItem("tema"); if (t === "light" || t === "dark") r.dataset.theme = t; } catch (e) {}
+  })();
+</script>
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/assets/img/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="icon" href="/assets/img/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="../../assets/fonts/bricolage-grotesque-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="css/sim.css">
+</head>
+<body>
+<a class="skip" href="#sim">Pular para o simulador</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="../../#laboratorio"><span aria-hidden="true">←</span> lucasrikelmi.dev</a>
+    <div class="theme-switch"></div>
+  </div>
+</header>
+
+<section class="intro wrap">
+  <p class="mono">Laboratório · arquitetura de computadores</p>
+  <h1>Simulador de sistema <em>RV32</em></h1>
+  <p class="lede">Uma CPU RISC-V (subconjunto do RV32I) com cache L1, barramento compartilhado, DMA em rajada, controlador de interrupções e periféricos mapeados em memória, simulados <strong>ciclo a ciclo</strong>. Escolha um programa, execute passo a passo e observe quem está usando o barramento, onde a cache acerta ou erra e quanto custa cada interrupção.</p>
+  <ul class="facts">
+    <li><b>34</b> instruções + 8 pseudo</li>
+    <li><b>8</b> blocos de hardware</li>
+    <li><b>14</b> testes automatizados</li>
+    <li><b>0</b> dependências</li>
+  </ul>
+</section>
+
+<main id="sim" class="wrap sim" aria-label="Simulador">
+  <div class="toolbar" role="toolbar" aria-label="Controles da simulação">
+    <label class="field prog">
+      <span class="sr-only">Programa</span>
+      <select id="program"></select>
+    </label>
+    <div class="ctl">
+      <button class="icon-btn" id="btn-reset" title="Reiniciar (R)" aria-label="Reiniciar"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      <button class="icon-btn" id="btn-step" title="Avançar 1 ciclo (.)" aria-label="Avançar um ciclo"><svg viewBox="0 0 24 24"><path d="M6 5l9 7-9 7z"/><path d="M18 5v14"/></svg></button>
+      <button class="icon-btn" id="btn-instr" title="Avançar 1 instrução (N)" aria-label="Avançar uma instrução"><svg viewBox="0 0 24 24"><path d="M4 5l7 7-7 7z"/><path d="M13 5l7 7-7 7z"/></svg></button>
+      <button class="icon-btn play" id="btn-run" title="Executar / pausar (Espaço)" aria-label="Executar"><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg><svg class="i-pause" viewBox="0 0 24 24"><path d="M7 4h4v16H7zM14 4h4v16h-4z"/></svg></button>
+      <button class="icon-btn" id="btn-end" title="Executar até o fim" aria-label="Executar até o fim"><svg viewBox="0 0 24 24"><path d="M4 5l8 7-8 7zM12 5l8 7-8 7z"/><path d="M21 5v14"/></svg></button>
+    </div>
+    <label class="field speed">
+      <span>Velocidade</span>
+      <input id="speed" type="range" min="0" max="6" step="1" value="2" aria-describedby="speed-val">
+      <output id="speed-val">20 ciclos/s</output>
+    </label>
+    <div class="counter" aria-live="off">
+      <span class="mono">Ciclo</span><b id="cycle">0</b>
+    </div>
+    <span class="pill" id="status">pronto</span>
+  </div>
+  <p class="prog-summary" id="summary"></p>
+
+  <section class="panel diagram" aria-label="Diagrama do sistema">
+    <div class="diagram-scroll">
+      <svg id="diagram" viewBox="0 0 1000 360" role="img" aria-labelledby="diag-title">
+        <title id="diag-title">Diagrama: CPU, caches, RAM e DMA ligados ao barramento; timer, console, LED e PIC abaixo.</title>
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker>
+        </defs>
+        <!-- ligações -->
+        <path class="link" id="l-cpu-i" d="M230 70 H270"/>
+        <path class="link" id="l-cpu-d" d="M230 160 H270"/>
+        <path class="link" id="l-i-bus" d="M420 68 H445 V258"/>
+        <path class="link" id="l-d-bus" d="M345 195 V258"/>
+        <path class="link" id="l-cpu-mmio" d="M130 200 V258"/>
+        <path class="link" id="l-ram-bus" d="M555 200 V258"/>
+        <path class="link" id="l-dma-bus" d="M780 200 V258"/>
+        <path class="link" id="l-bus-timer" d="M145 270 V300"/>
+        <path class="link" id="l-bus-console" d="M345 270 V300"/>
+        <path class="link" id="l-bus-led" d="M535 270 V300"/>
+        <path class="link" id="l-bus-pic" d="M760 270 V300"/>
+        <path class="link irq" id="l-irq" d="M880 300 V240 H965 V20 H130 V30"/>
+        <!-- barramento -->
+        <rect class="busbar" id="bus" x="40" y="252" width="920" height="18" rx="9"/>
+        <text class="bus-label" x="52" y="265">BARRAMENTO</text>
+        <text class="bus-owner" id="bus-owner" x="948" y="265" text-anchor="end">livre</text>
+        <circle class="packet" id="packet" r="6" cx="-20" cy="261"/>
+        <!-- CPU -->
+        <g class="block" id="b-cpu">
+          <rect x="30" y="30" width="200" height="170" rx="14"/>
+          <text class="b-title" x="46" y="54">CPU</text>
+          <text class="b-state" id="cpu-state" x="214" y="54" text-anchor="end">FETCH</text>
+          <text class="b-k" x="46" y="84">PC</text><text class="b-v" id="cpu-pc" x="214" y="84" text-anchor="end">0x00000000</text>
+          <text class="b-k" x="46" y="108">IR</text><text class="b-v" id="cpu-ir" x="214" y="108" text-anchor="end">—</text>
+          <text class="b-instr" id="cpu-dis" x="46" y="138">—</text>
+          <text class="b-k" x="46" y="168">MIE</text><text class="b-v" id="cpu-mie" x="96" y="168">1</text>
+          <text class="b-k" x="120" y="168">ISR</text><text class="b-v" id="cpu-isr" x="160" y="168">não</text>
+          <text class="b-k small" x="46" y="188">instruções</text><text class="b-v small" id="cpu-instret" x="214" y="188" text-anchor="end">0</text>
+        </g>
+        <!-- caches -->
+        <g class="block" id="b-l1i">
+          <rect x="270" y="30" width="150" height="75" rx="12"/>
+          <text class="b-title" x="284" y="52">L1I</text>
+          <text class="b-hit" id="l1i-last" x="406" y="52" text-anchor="end"></text>
+          <text class="b-k small" x="284" y="74">acertos</text><text class="b-v small" id="l1i-hits" x="406" y="74" text-anchor="end">0</text>
+          <text class="b-k small" x="284" y="94">faltas</text><text class="b-v small" id="l1i-miss" x="406" y="94" text-anchor="end">0</text>
+        </g>
+        <g class="block" id="b-l1d">
+          <rect x="270" y="120" width="150" height="75" rx="12"/>
+          <text class="b-title" x="284" y="142" id="l1d-name">L1D</text>
+          <text class="b-hit" id="l1d-last" x="406" y="142" text-anchor="end"></text>
+          <text class="b-k small" x="284" y="164">acertos</text><text class="b-v small" id="l1d-hits" x="406" y="164" text-anchor="end">0</text>
+          <text class="b-k small" x="284" y="184">faltas</text><text class="b-v small" id="l1d-miss" x="406" y="184" text-anchor="end">0</text>
+        </g>
+        <!-- RAM -->
+        <g class="block" id="b-ram">
+          <rect x="470" y="30" width="170" height="170" rx="14"/>
+          <text class="b-title" x="486" y="54">RAM</text>
+          <text class="b-k small" x="624" y="54" text-anchor="end">64 KB</text>
+          <g id="ram-map"></g>
+          <text class="b-k small" x="486" y="188">transações</text><text class="b-v small" id="ram-tx" x="624" y="188" text-anchor="end">0</text>
+        </g>
+        <!-- DMA -->
+        <g class="block" id="b-dma">
+          <rect x="690" y="30" width="180" height="170" rx="14"/>
+          <text class="b-title" x="706" y="54">DMA</text>
+          <text class="b-state" id="dma-state" x="854" y="54" text-anchor="end">ocioso</text>
+          <text class="b-k small" x="706" y="82">origem</text><text class="b-v small" id="dma-src" x="854" y="82" text-anchor="end">—</text>
+          <text class="b-k small" x="706" y="102">destino</text><text class="b-v small" id="dma-dst" x="854" y="102" text-anchor="end">—</text>
+          <text class="b-k small" x="706" y="122">restam</text><text class="b-v small" id="dma-left" x="854" y="122" text-anchor="end">—</text>
+          <rect class="prog-bg" x="706" y="140" width="148" height="8" rx="4"/>
+          <rect class="prog-fg" id="dma-prog" x="706" y="140" width="0" height="8" rx="4"/>
+          <text class="b-k small" x="706" y="180">espera p/ barramento</text><text class="b-v small" id="dma-stalls" x="854" y="180" text-anchor="end">0</text>
+        </g>
+        <!-- periféricos -->
+        <g class="block dev" id="b-timer">
+          <rect x="60" y="300" width="170" height="50" rx="12"/>
+          <text class="b-title small" x="74" y="321">TIMER</text>
+          <text class="b-v small" id="timer-v" x="216" y="321" text-anchor="end">off</text>
+          <rect class="prog-bg" x="74" y="332" width="142" height="6" rx="3"/>
+          <rect class="prog-fg" id="timer-prog" x="74" y="332" width="0" height="6" rx="3"/>
+        </g>
+        <g class="block dev" id="b-console">
+          <rect x="260" y="300" width="170" height="50" rx="12"/>
+          <text class="b-title small" x="274" y="321">CONSOLE</text>
+          <text class="b-v small" id="console-v" x="416" y="321" text-anchor="end">—</text>
+          <text class="b-k small" id="console-last" x="274" y="341">sem saída</text>
+        </g>
+        <g class="block dev" id="b-led">
+          <rect x="460" y="300" width="150" height="50" rx="12"/>
+          <text class="b-title small" x="474" y="321">LED</text>
+          <circle class="led" id="led" cx="586" cy="325" r="10"/>
+          <text class="b-k small" id="led-v" x="474" y="341">0 trocas</text>
+        </g>
+        <g class="block dev" id="b-pic">
+          <rect x="640" y="300" width="240" height="50" rx="12"/>
+          <text class="b-title small" x="654" y="321">PIC</text>
+          <g id="pic-bits"></g>
+          <text class="b-k small" id="pic-v" x="654" y="341">nenhuma pendente</text>
+        </g>
+        <text class="irq-label" x="935" y="140" transform="rotate(90 935 140)">linha de IRQ</text>
+      </svg>
+    </div>
+    <ul class="legend">
+      <li><i class="sw cpu"></i>CPU no barramento</li>
+      <li><i class="sw dma"></i>DMA no barramento</li>
+      <li><i class="sw hit"></i>acerto de cache</li>
+      <li><i class="sw miss"></i>falta de cache</li>
+      <li><i class="sw irq"></i>interrupção</li>
+    </ul>
+  </section>
+
+  <div class="grid">
+    <section class="panel code" aria-labelledby="h-code">
+      <header class="p-head">
+        <h2 id="h-code">Programa</h2>
+        <div class="tabs" role="tablist">
+          <button role="tab" aria-selected="true" aria-controls="tab-listing" id="t-listing">Listagem</button>
+          <button role="tab" aria-selected="false" aria-controls="tab-editor" id="t-editor">Editor</button>
+        </div>
+      </header>
+      <div id="tab-listing" role="tabpanel" aria-labelledby="t-listing" class="listing-wrap">
+        <table class="listing" id="listing"><thead><tr><th>end.</th><th>código</th><th>fonte</th></tr></thead><tbody></tbody></table>
+        <p class="hint">Clique numa linha para criar um ponto de parada.</p>
+      </div>
+      <div id="tab-editor" role="tabpanel" aria-labelledby="t-editor" class="editor-wrap" hidden>
+        <textarea id="editor" spellcheck="false" aria-label="Código assembly"></textarea>
+        <div class="editor-bar">
+          <button class="btn small primary" id="btn-assemble">Montar e carregar</button>
+          <span class="asm-msg" id="asm-msg" role="status"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel regs" aria-labelledby="h-regs">
+      <header class="p-head">
+        <h2 id="h-regs">Registradores</h2>
+        <button class="chip" id="btn-radix" aria-pressed="false">hex</button>
+      </header>
+      <div class="reg-grid" id="regs"></div>
+    </section>
+
+    <section class="panel metrics" aria-labelledby="h-metrics">
+      <header class="p-head"><h2 id="h-metrics">Métricas</h2></header>
+      <div class="m-grid" id="metrics"></div>
+    </section>
+
+    <section class="panel cache" aria-labelledby="h-cache">
+      <header class="p-head">
+        <h2 id="h-cache">Cache L1</h2>
+        <span class="mono" id="cache-geom"></span>
+      </header>
+      <div id="caches"></div>
+      <p class="hint">Cada célula é uma linha (conjunto × via). Brilho = uso recente; contorno verde = acerto, amarelo = falta; ponto = linha suja (write-back).</p>
+    </section>
+
+    <section class="panel bus" aria-labelledby="h-bus">
+      <header class="p-head"><h2 id="h-bus">Barramento</h2><span class="mono">últimos 240 ciclos</span></header>
+      <canvas id="bus-canvas" height="56" aria-label="Linha do tempo de ocupação do barramento"></canvas>
+      <div class="util" id="bus-util"></div>
+    </section>
+
+    <section class="panel io" aria-labelledby="h-io">
+      <header class="p-head"><h2 id="h-io">Console</h2><span class="mono">0x10000100</span></header>
+      <pre class="term" id="term" aria-live="polite"></pre>
+      <form class="term-in" id="term-form">
+        <label class="sr-only" for="term-input">Digite para enviar ao console</label>
+        <input id="term-input" autocomplete="off" placeholder="digite e pressione Enter" maxlength="32">
+        <button class="btn small">Enviar</button>
+      </form>
+    </section>
+
+    <section class="panel mem" aria-labelledby="h-mem">
+      <header class="p-head">
+        <h2 id="h-mem">Memória</h2>
+        <label class="field inline"><span class="mono">a partir de</span><input id="mem-addr" value="0x300" size="8" spellcheck="false"></label>
+      </header>
+      <div class="hexdump" id="hexdump"></div>
+    </section>
+
+    <section class="panel log" aria-labelledby="h-log">
+      <header class="p-head">
+        <h2 id="h-log">Eventos</h2>
+        <div class="filters" id="log-filters"></div>
+      </header>
+      <ol class="events" id="events"></ol>
+    </section>
+
+    <section class="panel config" aria-labelledby="h-config">
+      <header class="p-head">
+        <h2 id="h-config">Configuração</h2>
+        <div class="presets">
+          <button class="chip" data-preset="default">didática</button>
+          <button class="chip" data-preset="original">planilha original</button>
+        </div>
+      </header>
+      <form id="config" class="cfg"></form>
+      <p class="hint">Aplicar reinicia a simulação com o mesmo programa.</p>
+    </section>
+
+    <section class="panel bench" aria-labelledby="h-bench">
+      <header class="p-head"><h2 id="h-bench">Experimentos</h2><span class="mono">medidos, não estimados</span></header>
+      <div class="exp">
+        <div class="exp-head">
+          <h3>CPU × DMA: copiar <select id="bench-bytes"><option>16</option><option selected>64</option><option>256</option><option>1024</option></select> bytes</h3>
+          <button class="btn small primary" id="btn-bench">Rodar</button>
+        </div>
+        <div class="bars" id="bench-out"></div>
+      </div>
+      <div class="exp">
+        <div class="exp-head">
+          <h3>Localidade: passo 4 B × 64 B</h3>
+          <button class="btn small" id="btn-stride">Rodar</button>
+        </div>
+        <div class="bars" id="stride-out"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<section class="about wrap" id="sobre">
+  <div class="about-grid">
+    <div>
+      <p class="mono">Como funciona</p>
+      <h2>Da planilha <em>para o navegador</em></h2>
+    </div>
+    <div class="about-text">
+      <p>Nasceu em <strong>Excel + VBA</strong> para um seminário de Arquitetura de Computadores e ganhou esta versão web: o núcleo da simulação é JavaScript puro, sem DOM e testável em Node, e a interface só observa a máquina. O que o modelo cobre:</p>
+      <ul class="fixes">
+        <li><b>Memória com custo real.</b> Leituras e escritas param a CPU até a transação terminar, então o ganho do DMA aparece medido no relógio, não projetado.</li>
+        <li><b>Um barramento, vários mestres.</b> Faltas de cache, write-through, periféricos e DMA disputam o mesmo árbitro, fixo ou round-robin, e a disputa aparece na linha do tempo.</li>
+        <li><b>Periféricos mapeados em memória.</b> Timer, console, LED, DMA e controlador de interrupções respondem a endereços, com latência própria.</li>
+        <li><b>Interrupções completas.</b> <code>mepc</code>, <code>MRET</code>, <code>WFI</code>, bit global de habilitação e vetor configurável, como no RISC-V.</li>
+        <li><b>Cache coerente com o DMA.</b> Ao iniciar uma cópia, só as linhas que cobrem o destino são invalidadas.</li>
+        <li><b>Métricas na fonte.</b> A latência de interrupção é medida no próprio controlador, do pedido à entrada na rotina.</li>
+      </ul>
+      <p class="fine">Modelo de temporização: a cache guarda só tags (os dados vivem na RAM), cada transação de memória custa a penalidade de falta, o DMA move uma palavra por ciclo após os wait states da rajada, e a entrada em interrupção custa 5 ciclos. É um modelo didático, não um simulador de microarquitetura com pipeline.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in mono">
+    <span>Lucas Rikelmi · Laboratório</span>
+    <a href="https://github.com/LucasRikelmi/lucasrikelmi.dev/tree/main/lab/cpu" rel="noopener">Código-fonte no GitHub</a>
+  </div>
+</footer>
+
+<script src="../../assets/js/site.js" defer></script>
+<script type="module" src="js/ui/app.js"></script>
+</body>
+</html>

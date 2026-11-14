@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login — Locadora Veículos</title>
+
+    <style>
+        :root {
+          --bg: #0f1724; /* Ajustado para combinar levemente com seu global.css */
+          --accent: #1e90ff; /* Seu azul padrão */
+          --accent-hover: #1c86ee;
+          --card-bg: rgba(11, 18, 32, 0.85);
+          --text-primary: #e6f0ff;
+          --text-secondary: #9aa4b2;
+          --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+          height: 100%;
+          background: var(--bg);
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui; /* Fonte do seu projeto */
+          overflow: hidden;
+        }
+
+        canvas { position: fixed; inset: 0; z-index: 0; display: block; }
+
+        /* Container principal */
+        .login-container {
+          position: fixed;
+          left: 50%; top: 50%;
+          transform: translate(-50%, -50%);
+          width: min(400px, 90vw);
+          padding: 2.5rem 2rem;
+          border-radius: 16px;
+          background: var(--card-bg);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          z-index: 2;
+          color: var(--text-primary);
+          animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translate(-50%, -45%); }
+          to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        .login-header {
+          text-align: center; margin-bottom: 2rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding-bottom: 1rem;
+        }
+
+        .login-header .logo {
+            width: 50px; height: 50px; background: var(--accent);
+            color: white; font-weight: 800; border-radius: 10px;
+            display: grid; place-items: center; margin: 0 auto 15px auto;
+            font-size: 20px; box-shadow: 0 0 20px rgba(30, 144, 255, 0.4);
+        }
+
+        .login-header h1 {
+          font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;
+          color: #fff;
+        }
+
+        .field { margin-bottom: 1.25rem; }
+        .field label {
+          display: block; margin-bottom: 0.5rem; font-size: 0.85rem;
+          font-weight: 500; color: var(--text-secondary);
+        }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper input {
+          width: 100%; padding: 0.8rem 1rem; border-radius: 8px;
+          border: 1px solid var(--border-color);
+          background: rgba(0, 0, 0, 0.2);
+          color: var(--text-primary);
+          font-size: 0.95rem; outline: none;
+          transition: all 0.2s;
+        }
+        .input-wrapper input:focus {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2);
+        }
+
+        .button-container { margin-top: 2rem; }
+        .login-button {
+          width: 100%; padding: 0.9rem; border-radius: 8px; border: none;
+          background: var(--accent); color: white; font-weight: 600;
+          cursor: pointer; transition: all 0.3s;
+          display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .login-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+        .button-spinner {
+          display: none; width: 18px; height: 18px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top-color: white; border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .status-message {
+          text-align: center; font-size: 0.85rem; margin-top: 1rem;
+          min-height: 1.25rem; color: var(--text-secondary);
+        }
+        .status-message.success { color: #4ade80; }
+        .status-message.error { color: #f87171; }
+
+        .footer {
+          text-align: center; font-size: 0.75rem; margin-top: 1.5rem;
+          color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo">LV</div>
+        <h1>Acesso ao Sistema</h1>
+        <p style="font-size: 0.9rem; color:var(--text-secondary)">Gestão de Frota e Locações</p>
+    </div>
+
+    <div class="field">
+        <label for="u">Login ou E-mail</label>
+        <div class="input-wrapper">
+            <input id="u" placeholder="Seu login" autocomplete="username">
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="p">Senha</label>
+        <div class="input-wrapper">
+            <input id="p" type="password" placeholder="••••••" autocomplete="current-password">
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button class="login-button" id="btn">
+            <span id="button-text">ENTRAR</span>
+            <div class="button-spinner" id="spinner"></div>
+        </button>
+        <div class="status-message" id="msg"></div>
+    </div>
+
+    <div class="footer">
+        <p>Locadora Veículos © 2025</p>
+    </div>
+</div>
+
+<script>
+    /* ==========================================================
+       FUNDO ANIMADO (Partículas)
+       ========================================================== */
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d", {alpha: true});
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+
+    const NUM_PARTICLES = Math.floor(W * H / 8000); // Menos partículas para ficar leve
+    const particles = Array.from({length: NUM_PARTICLES}, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+      radius: Math.random() * 2 + 1,
+      color: `rgba(30, 144, 255, ${0.3 + Math.random() * 0.4})` // Azul do tema
+    }));
+
+    let convergeMode = false;
+    let convergeCenter = {x: W/2, y: H/2};
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.fillStyle = 'rgba(15, 23, 36, 0.2)'; // Rastro suave
+      ctx.fillRect(0, 0, W, H);
+
+      particles.forEach(p => {
+        if(convergeMode) {
+            // Efeito de sucção ao logar
+            p.x += (convergeCenter.x - p.x) * 0.08;
+            p.y += (convergeCenter.y - p.y) * 0.08;
+            p.radius *= 0.95;
+        } else {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+    }
+    window.addEventListener('resize', () => { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; });
+    animate();
+
+    /* ==========================================================
+       LÓGICA DE LOGIN REAL
+       ========================================================== */
+    const API_URL = 'http://localhost:8080';
+    const btn = document.getElementById('btn');
+    const msg = document.getElementById('msg');
+    const userIn = document.getElementById('u');
+    const passIn = document.getElementById('p');
+
+    // Aciona login ao apertar Enter
+    passIn.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+    btn.addEventListener('click', handleLogin);
+
+    async function handleLogin() {
+      const username = userIn.value.trim();
+      const password = passIn.value.trim();
+
+      if (!username || !password) {
+        showMessage('Por favor, preencha todos os campos.', 'error');
+        shakeForm();
+        return;
+      }
+
+      setLoading(true);
+
+      // Autenticação no servidor (a senha nunca volta para o navegador)
+      try {
+          const resp = await fetch(`${API_URL}/auth/login`, {
+              method: 'POST', headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ login: username, senha: password })
+          });
+          if (resp.ok) {
+              loginSuccess(await resp.json());
+          } else if (resp.status === 401) {
+              setLoading(false);
+              showMessage('Usuário ou senha incorretos.', 'error');
+              shakeForm();
+          } else {
+              throw new Error('Erro na API');
+          }
+      } catch (e) {
+          console.error(e);
+          setLoading(false);
+          showMessage('Erro ao conectar com o servidor.', 'error');
+      }
+    }
+
+    function loginSuccess(user) {
+        showMessage(`Bem-vindo, ${user.nome.split(' ')[0]}!`, 'success');
+        btn.style.background = '#16a34a'; // Verde sucesso
+        document.getElementById('button-text').innerText = 'SUCESSO';
+
+        // Inicia efeito visual
+        convergeMode = true;
+
+        // Salva sessão simples (opcional)
+        localStorage.setItem('usuarioLogado', JSON.stringify(user));
+
+        // Redireciona para o Dashboard
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1200);
+    }
+
+    function setLoading(isLoading) {
+        btn.disabled = isLoading;
+        document.getElementById('spinner').style.display = isLoading ? 'block' : 'none';
+        document.getElementById('button-text').style.opacity = isLoading ? '0' : '1';
+    }
+
+    function showMessage(text, type) {
+        msg.textContent = text;
+        msg.className = 'status-message ' + type;
+    }
+
+    function shakeForm() {
+        const form = document.querySelector('.login-container');
+        form.animate([
+            { transform: 'translate(-50%, -50%)' },
+            { transform: 'translate(calc(-50% - 5px), -50%)' },
+            { transform: 'translate(calc(-50% + 5px), -50%)' },
+            { transform: 'translate(-50%, -50%)' }
+        ], { duration: 300 });
+    }
+
+    // Foco inicial
+    setTimeout(() => userIn.focus(), 500);
+
+</script>
+</body>
+</html>

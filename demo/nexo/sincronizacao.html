@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sincronização | NEXO</title>
+    <meta name="robots" content="noindex, follow">
+    <link
+      href="vendor/css/inter.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="vendor/css/fontawesome-all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+    <style>
+      .upload-timestamp {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        min-height: 1rem;
+        font-style: italic;
+      }
+
+      .sync-actions-bar {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .btn-action-bar {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1.1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-surface);
+        color: var(--text-main);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .btn-action-bar:hover { background: var(--border-color); }
+      .btn-action-bar.mock-ativo {
+        border-color: #f59e0b;
+        color: #f59e0b;
+      }
+
+      .sync-card.mock-ativo {
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
+      }
+</style>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+</script>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Retrair menu">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="index.html" data-tooltip="Início"><i class="fas fa-home"></i> <span>Início</span></a>
+        </li>
+        <li>
+          <a href="dashboard.html" data-tooltip="Dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+          <a href="planejamento.html" data-tooltip="Planejamento"><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a>
+        </li>
+        <li>
+          <a href="controle.html" data-tooltip="Controle"><i class="fas fa-list-check"></i> <span>Controle</span></a>
+        </li>
+        <li class="active">
+          <a href="sincronizacao.html" data-tooltip="Sincronização"><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a>
+        </li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item"><a href="configuracoes.html" data-tooltip="Configurações"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.style.transition = ""; }); });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title"><h2>Sincronização de Dados</h2></div>
+        <div class="topbar-actions">
+
+          <button class="btn-action-bar" id="btnMock" style="margin-right:0.25rem">
+            <i class="fas fa-flask"></i> Carregar Base Mock
+          </button>
+
+          <button class="btn-action-bar" id="btnLimparTudo" title="Apagar permanentemente todos os dados importados deste navegador" style="margin-right:0.75rem; color:var(--color-danger); border-color:var(--color-danger)">
+            <i class="fas fa-trash-alt"></i> Destruir Todas as Bases
+          </button>
+
+          <button
+            class="icon-btn interativo"
+            id="btnPrivacidade"
+            title="Ativar Modo Privacidade"
+          >
+            <i class="fas fa-eye"></i>
+          </button>
+          <button
+            class="icon-btn interativo"
+            id="themeToggle"
+            title="Alternar Modo Claro/Escuro"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img src="img/logo-marca.png" class="marca-avatar-img" alt="Logo Meridiano" />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+
+        <div class="sync-grid">
+
+          <div class="sync-card">
+            <button class="sync-card-clear-btn" data-tipo="Empresas" title="Apagar dados importados de Base de Empresas"><i class="fas fa-trash-alt"></i></button>
+            <button class="sync-card-info-btn" title="Como obter este arquivo" onclick="NexoModal.alert('Base de Empresas', 'Exportação da base de empresas do seu sistema de cadastro, em CSV (separador ; ou ,).', 'info')"><span class="custom-info-icon">i</span></button>
+            <i class="fas fa-building sync-icon"></i>
+            <h3>Base de Empresas</h3>
+            <span class="sync-status" id="status_Empresas">Aguardando arquivo...</span>
+            <input type="file" id="file_Empresas" class="file-input-hidden" accept=".csv" />
+            <button
+              class="btn-upload interativo"
+              onclick="document.getElementById('file_Empresas').click()"
+            >
+              <i class="fas fa-upload"></i> Importar Empresas
+            </button>
+            <p class="upload-timestamp" id="ts_Empresas"></p>
+          </div>
+
+          <div class="sync-card" style="text-align: left;">
+            <button class="sync-card-info-btn" title="Como obter estes arquivos" onclick="NexoModal.alert('Relatório de OCs / Transferências', '<strong>Relatório de OCs:</strong> ocorrências registradas na unidade, em CSV.<br><br><strong>Transferências:</strong> empresas enviadas ou recebidas de outras unidades, em CSV.', 'info')"><span class="custom-info-icon">i</span></button>
+            <div style="display: flex; gap: 1.5rem; text-align: center; align-items: stretch;">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; padding-top: 1.75rem;">
+                <button class="sync-card-clear-btn" data-tipo="Ocs" title="Apagar dados importados do Relatório de OCs" style="top:0; left:0;"><i class="fas fa-trash-alt"></i></button>
+                <i class="fas fa-file-signature sync-icon" style="font-size: 2.4rem; margin-bottom: 0.75rem;"></i>
+                <h3 style="font-size: 1rem; margin: 0 0 0.5rem; min-height: 2.4em;">Relatório de OCs</h3>
+                <span class="sync-status" id="status_Ocs">Aguardando arquivo...</span>
+                <input type="file" id="file_Ocs" class="file-input-hidden" accept=".csv" />
+                <button
+                  class="btn-upload interativo"
+                  style="padding: 0.7rem; font-size: 0.85rem;"
+                  onclick="document.getElementById('file_Ocs').click()"
+                >
+                  <i class="fas fa-upload"></i> Importar OCs
+                </button>
+                <p class="upload-timestamp" id="ts_Ocs" style="margin-top: auto; padding-top: 0.5rem;"></p>
+              </div>
+              <div style="width: 1px; background: var(--border-color); flex-shrink: 0;"></div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; padding-top: 1.75rem;">
+                <button class="sync-card-clear-btn" data-tipo="OcsTransferencia" title="Apagar dados importados de Transferências entre Unidades" style="top:0; left:0;"><i class="fas fa-trash-alt"></i></button>
+                <i class="fas fa-right-left sync-icon" style="font-size: 2.4rem; margin-bottom: 0.75rem; color: #0d9488"></i>
+                <h3 style="font-size: 1rem; margin: 0 0 0.5rem; min-height: 2.4em;">Transferências</h3>
+                <span class="sync-status" id="status_OcsTransferencia">Aguardando arquivo...</span>
+                <input type="file" id="file_OcsTransferencia" class="file-input-hidden" accept=".csv" />
+                <button
+                  class="btn-upload interativo"
+                  style="padding: 0.7rem; font-size: 0.85rem;"
+                  onclick="document.getElementById('file_OcsTransferencia').click()"
+                >
+                  <i class="fas fa-upload"></i> Importar Transf.
+                </button>
+                <p class="upload-timestamp" id="ts_OcsTransferencia" style="margin-top: auto; padding-top: 0.5rem;"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="sync-card">
+            <button class="sync-card-clear-btn" data-tipo="EmpresasRede" title="Apagar dados importados da Base da Rede"><i class="fas fa-trash-alt"></i></button>
+            <button class="sync-card-info-btn" title="Como obter este arquivo" onclick="NexoModal.alert('Base da Rede', 'Mesmo layout da Base de Empresas, com todas as unidades da rede.', 'info')"><span class="custom-info-icon">i</span></button>
+            <i class="fas fa-globe-americas sync-icon" style="color: var(--color-primary)"></i>
+            <h3>Base da Rede</h3>
+            <span class="sync-status" id="status_EmpresasRede">Aguardando arquivo...</span>
+            <input type="file" id="file_EmpresasRede" class="file-input-hidden" accept=".csv" />
+            <button
+              class="btn-upload interativo"
+              onclick="document.getElementById('file_EmpresasRede').click()"
+            >
+              <i class="fas fa-upload"></i> Importar Rede
+            </button>
+            <p class="upload-timestamp" id="ts_EmpresasRede"></p>
+          </div>
+
+          <div class="sync-card">
+            <button class="sync-card-clear-btn" data-tipo="Coordenadas" title="Apagar dados importados de Localizações Confirmadas"><i class="fas fa-trash-alt"></i></button>
+            <button class="sync-card-info-btn" title="Como obter este arquivo" onclick="NexoModal.alert('Localizações Confirmadas', 'Planilha de localizações confirmadas em campo (CNPJ + latitude/longitude), exportada em CSV.', 'info')"><span class="custom-info-icon">i</span></button>
+            <i class="fas fa-map-marked-alt sync-icon" style="color: var(--color-warning)"></i>
+            <h3>Localizações Confirmadas</h3>
+            <span class="sync-status" id="status_Coordenadas">Aguardando arquivo...</span>
+            <input type="file" id="file_Coordenadas" class="file-input-hidden" accept=".csv" />
+            <button
+              class="btn-upload interativo"
+              onclick="document.getElementById('file_Coordenadas').click()"
+            >
+              <i class="fas fa-upload"></i> Importar Localizações
+            </button>
+            <p class="upload-timestamp" id="ts_Coordenadas"></p>
+          </div>
+
+          <div class="sync-card">
+            <button class="sync-card-clear-btn" data-tipo="Contatos" title="Apagar dados importados de Contatos das Empresas"><i class="fas fa-trash-alt"></i></button>
+            <button class="sync-card-info-btn" title="Como obter este arquivo" onclick="NexoModal.alert('Contatos das Empresas', 'Relatório de contatos das empresas (nome, telefone e e-mail), exportado em CSV.', 'info')"><span class="custom-info-icon">i</span></button>
+            <i class="fas fa-address-book sync-icon" style="color: #8b5cf6"></i>
+            <h3>Contatos das Empresas</h3>
+            <span class="sync-status" id="status_Contatos">Aguardando arquivo...</span>
+            <input type="file" id="file_Contatos" class="file-input-hidden" accept=".csv" />
+            <button
+              class="btn-upload interativo"
+              onclick="document.getElementById('file_Contatos').click()"
+            >
+              <i class="fas fa-upload"></i> Importar Contatos
+            </button>
+            <p class="upload-timestamp" id="ts_Contatos"></p>
+          </div>
+
+          <div class="sync-card">
+            <button class="sync-card-clear-btn" data-tipo="Emails" title="Apagar dados importados do Histórico de E-mails"><i class="fas fa-trash-alt"></i></button>
+            <button class="sync-card-info-btn" title="Como obter este arquivo" onclick="NexoModal.alert('Histórico de E-mails', 'Histórico de e-mails enviados às empresas (data, status e CNPJ), exportado em CSV.', 'info')"><span class="custom-info-icon">i</span></button>
+            <i class="fas fa-envelope-open-text sync-icon" style="color: #ec4899"></i>
+            <h3>Histórico de E-mails</h3>
+            <span class="sync-status" id="status_Emails">Aguardando arquivo...</span>
+            <input type="file" id="file_Emails" class="file-input-hidden" accept=".csv" />
+            <button
+              class="btn-upload interativo"
+              onclick="document.getElementById('file_Emails').click()"
+            >
+              <i class="fas fa-upload"></i> Importar E-mails
+            </button>
+            <p class="upload-timestamp" id="ts_Emails"></p>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <script src="vendor/js/pako.min.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/importacao/file_processor.js"></script>
+    <script src="js/importacao/contratos_arquivo.js"></script>
+    <script src="vendor/js/argon2.umd.min.js"></script>
+    <script src="js/importacao/crypto_manager.js"></script>
+    <script src="js/importacao/storage_manager.js"></script>
+    <script src="js/importacao/upload_manager.js"></script>
+    <script src="js/importacao/privacy_manager.js"></script>
+    <script src="js/config_unidade.js"></script>
+
+    <script src="js/config_equipe.js"></script>
+    <script src="js/importacao/mock_manager.js"></script>
+    <script src="js/changelog.js"></script>
+    <script src="js/ocorrencias.js"></script>
+    <script src="js/regras_negocio.js"></script>
+    <script src="js/sincronizacao.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

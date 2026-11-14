@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | NEXO</title>
+    <meta name="robots" content="noindex, follow">
+    <link
+      href="vendor/css/inter.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="vendor/css/fontawesome-all.min.css"
+    />
+    <script src="vendor/js/chart.umd.min.js"></script>
+    <script src="vendor/js/chartjs-plugin-datalabels.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+</script>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Retrair menu">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="index.html" data-tooltip="Início"><i class="fas fa-home"></i> <span>Início</span></a>
+        </li>
+        <li class="active">
+          <a href="dashboard.html" data-tooltip="Dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+          <a href="planejamento.html" data-tooltip="Planejamento"><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a>
+        </li>
+        <li>
+          <a href="controle.html" data-tooltip="Controle"><i class="fas fa-list-check"></i> <span>Controle</span></a>
+        </li>
+        <li>
+          <a href="sincronizacao.html" data-tooltip="Sincronização"><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a>
+        </li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item"><a href="configuracoes.html" data-tooltip="Configurações"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.style.transition = ""; }); });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title"><h2>Dashboard Operacional</h2></div>
+        <div class="topbar-actions">
+          <button class="icon-btn interativo" id="btnPrivacidade" title="Ativar Modo Privacidade">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="icon-btn interativo" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img src="img/logo-marca.png" class="marca-avatar-img" />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div id="subview-wrapper" style="display:none; padding:0 4px;">
+
+        <div style="display:flex; align-items:center; gap:12px; padding:14px 0 16px; border-bottom:1px solid var(--border-color); margin-bottom:20px; flex-wrap:wrap;">
+          <button onclick="voltarDashboard()" style="padding:6px 14px; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; gap:6px; white-space:nowrap; flex-shrink:0;">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </button>
+          <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+            <i id="sv-icone" class="fas fa-table" style="font-size:1.2rem;"></i>
+            <div style="min-width:0;">
+              <h2 id="sv-titulo" style="margin:0; font-size:1.1rem; font-weight:700;"></h2>
+              <small id="sv-count" style="color:var(--text-muted);"></small>
+            </div>
+          </div>
+          <button onclick="_ddAbrirModalColunas()" style="padding:6px 14px; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px; cursor:pointer; font-size:0.85rem; white-space:nowrap; flex-shrink:0;">
+            <i class="fas fa-columns"></i> Colunas
+          </button>
+          <button onclick="exportarDrilldownPDF()" style="padding:6px 14px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:0.85rem; white-space:nowrap; flex-shrink:0;">
+            <i class="fas fa-file-pdf"></i> PDF
+          </button>
+          <button onclick="exportarDrilldownCSV()" style="padding:6px 14px; background:var(--color-primary); color:white; border:none; border-radius:8px; cursor:pointer; font-size:0.85rem; white-space:nowrap; flex-shrink:0;">
+            <i class="fas fa-download"></i> CSV
+          </button>
+        </div>
+
+        <div id="sv-charts" style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px; align-items:flex-start;"></div>
+
+        <div id="sv-extra" style="margin-bottom:20px;"></div>
+
+        <div class="table-card" style="background:var(--bg-surface); border-radius:8px; overflow:hidden; padding:0; position:relative;">
+          <div id="drilldown-scroll" style="overflow-x:auto;">
+            <table class="preview-table v-lines" id="drilldown-table" style="width:100%; min-width:600px;">
+              <thead id="drilldown-thead"></thead>
+              <tbody id="drilldown-tbody"></tbody>
+            </table>
+          </div>
+          <div id="drilldown-paginacao"></div>
+        </div>
+
+        <div id="drilldown-thead-fixo" style="position:fixed; overflow:hidden; z-index:60; display:none; box-shadow:0 2px 8px rgba(0,0,0,0.18);">
+          <table class="preview-table v-lines" style="border-collapse:collapse;">
+            <thead id="drilldown-thead-fixo-inner"></thead>
+          </table>
+        </div>
+
+        <div style="margin-top:24px; text-align:center;">
+          <button onclick="voltarDashboard()" style="padding:8px 24px; background:var(--bg-surface); color:var(--text-main); border:1px solid var(--border-color); border-radius:8px; cursor:pointer; font-size:0.85rem;">
+            <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+          </button>
+        </div>
+      </div>
+
+      <div class="content-wrapper" id="dash-main">
+        <div class="kpi-grid">
+          <div class="kpi-card interativo" style="cursor:pointer" onclick="abrirDrilldown('total')" title="Ver lista completa de empresas">
+            <div class="kpi-icon"><i class="fas fa-building"></i></div>
+            <div class="kpi-data">
+              <h4>Total de Empresas</h4>
+              <h2 id="kpiTotal">0</h2>
+            </div>
+          </div>
+          <div class="kpi-card interativo" style="cursor:pointer" onclick="abrirDrilldown('respondidas')" title="Ver empresas respondidas">
+            <div class="kpi-icon" style="color: #10b981">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="kpi-data">
+              <h4>Total Respondidas</h4>
+              <h2 id="kpiRespondidas">0</h2>
+            </div>
+          </div>
+          <div class="kpi-card interativo" style="cursor:pointer" onclick="abrirDrilldown('atraso')" title="Ver empresas em atraso">
+            <div class="kpi-icon" style="color: #ef4444">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="kpi-data">
+              <h4>Prazo Vencido</h4>
+              <h2 id="kpiAtraso">0</h2>
+            </div>
+          </div>
+          <div class="kpi-card interativo" style="cursor:pointer" onclick="abrirDrilldown('ocs')" title="Ver OCs concluídas">
+            <div class="kpi-icon" style="color: #f59e0b">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <div class="kpi-data">
+              <h4>OCs Concluídas</h4>
+              <h2 id="kpiOcs">0</h2>
+            </div>
+          </div>
+
+          <div
+            class="kpi-card highlight-blue kpi-card-config"
+            style="flex-direction: column; align-items: flex-start; gap: 5px"
+          >
+            <div class="kpi-data" style="width: 100%">
+              <h4>% Trabalho Realizado</h4>
+              <h2 id="kpiPercTrabalho">0%</h2>
+            </div>
+            <div class="kpi-progress-track">
+              <div
+                class="kpi-progress-fill"
+                id="barTrabalho"
+                style="background: #3b82f6; width: 0%"
+              ></div>
+            </div>
+            <button class="kpi-config-btn" data-kpi="trabalho" title="Filtragens particulares"><i class="fas fa-cog"></i></button>
+            <span class="kpi-filtro-dot" data-kpi-dot="trabalho" title="Filtro customizado ativo"></span>
+            <div class="kpi-config-popover" data-kpi-popover="trabalho"></div>
+          </div>
+          <div
+            class="kpi-card highlight-green kpi-card-config"
+            style="flex-direction: column; align-items: flex-start; gap: 5px"
+          >
+            <div class="kpi-data" style="width: 100%">
+              <h4>% Resposta + OC</h4>
+              <h2 id="kpiPercRespostaOc">0%</h2>
+            </div>
+            <div class="kpi-progress-track">
+              <div
+                class="kpi-progress-fill"
+                id="barRespostaOc"
+                style="background: #10b981; width: 0%"
+              ></div>
+            </div>
+            <button class="kpi-config-btn" data-kpi="respostaOc" title="Filtragens particulares"><i class="fas fa-cog"></i></button>
+            <span class="kpi-filtro-dot" data-kpi-dot="respostaOc" title="Filtro customizado ativo"></span>
+            <div class="kpi-config-popover" data-kpi-popover="respostaOc"></div>
+          </div>
+          <div
+            class="kpi-card highlight-red"
+            style="flex-direction: column; align-items: flex-start; gap: 5px"
+          >
+            <div class="kpi-data" style="width: 100%">
+              <h4>% Atraso</h4>
+              <h2 id="kpiPercAtraso">0%</h2>
+            </div>
+            <div class="kpi-progress-track">
+              <div
+                class="kpi-progress-fill"
+                id="barAtraso"
+                style="background: #ef4444; width: 0%"
+              ></div>
+            </div>
+
+          </div>
+          <div
+            class="kpi-card highlight-neutral kpi-card-config"
+            style="flex-direction: column; align-items: flex-start; gap: 5px"
+          >
+            <div class="kpi-data" style="width: 100%">
+              <h4 id="kpiPercAssocLabel">% Associação</h4>
+              <h2 id="kpiPercAssoc">0%</h2>
+            </div>
+            <div class="kpi-progress-track">
+              <div
+                class="kpi-progress-fill"
+                id="barAssoc"
+                style="background: #94a3b8; width: 0%"
+              ></div>
+            </div>
+            <button class="kpi-config-btn" data-kpi="associacao" title="Filtragens particulares"><i class="fas fa-cog"></i></button>
+            <span class="kpi-filtro-dot" data-kpi-dot="associacao" title="Filtro customizado ativo"></span>
+            <div class="kpi-config-popover" data-kpi-popover="associacao"></div>
+          </div>
+        </div>
+
+        <div class="charts-grid mt-4">
+          <div class="chart-card highlight-blue chart-flex-container">
+
+            <div style="flex: 1; min-width: 0">
+              <div class="chart-header flex-between">
+                <h3 class="chart-title">Analistas - Trabalho Realizado</h3>
+                <div style="display: flex; gap: 10px; align-items: center; min-height: 28px;">
+                  <button
+                    id="btnResetAnalistas"
+                    class="btn-sm interativo"
+                    style="visibility: hidden; background: #10b981"
+                    title="Mostrar todos os analistas"
+                  >
+                    <i class="fas fa-users"></i> Restaurar
+                  </button>
+                  <button
+                    id="btnInverterEixo"
+                    class="btn-sm interativo"
+                    title="Inverter o Eixo do Gráfico"
+                  >
+                    <i class="fas fa-retweet"></i> Eixo
+                  </button>
+                </div>
+              </div>
+              <div class="canvas-container-lg">
+                <canvas id="chartTrabalhoAnalista"></canvas>
+              </div>
+            </div>
+
+            <div class="proto-legend-box">
+              <p class="legenda-titulo-sec" title="Clique nos itens para filtrar os dados">
+                Composto por:
+              </p>
+              <ul id="legendaDinamica" class="legend-list-proto">
+                <li class="comp-item active interativo" data-comp="contatada">
+                  <i class="fas fa-square bullet-icon"></i> Contatadas
+                </li>
+                <li class="comp-item active interativo" data-comp="agendada">
+                  <i class="fas fa-square bullet-icon"></i> Agendadas
+                </li>
+                <li class="comp-item active interativo" data-comp="estendida">
+                  <i class="fas fa-square bullet-icon"></i> Prazos Estendidos
+                </li>
+                <li class="comp-item active interativo" data-comp="prazoVencido">
+                  <i class="fas fa-square bullet-icon"></i> Atrasadas
+                </li>
+                <li class="comp-item active interativo" data-comp="lembrete">
+                  <i class="fas fa-square bullet-icon"></i> Lembretes Enviados
+                </li>
+                <li class="comp-item active interativo" data-comp="formalizada">
+                  <i class="fas fa-square bullet-icon"></i> Formalizadas
+                </li>
+                <li class="comp-item active interativo" data-comp="ocs">
+                  <i class="fas fa-square bullet-icon"></i> OCs
+                </li>
+                <li class="comp-item active interativo" data-comp="respondida">
+                  <i class="fas fa-square bullet-icon"></i> Respostas
+                </li>
+              </ul>
+              <div id="hiddenAnalistasContainer" class="hidden-analistas-container"></div>
+            </div>
+
+            <div class="pizza-compact-box">
+
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
+                <h3 id="pizzaChartTitle" class="chart-title" style="margin: 0; font-size: 1rem; white-space: nowrap;">
+                  Unidade
+                </h3>
+                <select id="filterGeral" class="modern-select interativo" style="flex-shrink: 0; max-width: 130px;"></select>
+              </div>
+
+              <div style="display: flex; justify-content: flex-start; align-items: center; gap: 5px; margin-bottom: 8px;">
+                <span style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+                  Empresas Finalizadas
+                </span>
+                <span
+                  class="custom-info-icon interativo"
+                  onclick="NexoModal.alert('Empresas Finalizadas', 'Indicador de encerramento efetivo da carga operacional da unidade.<br><br>Considera <strong>respostas concluídas</strong> e <strong>OCs efetivas</strong> no encerramento.<br><br>Desconsidera ocorrências de movimento (empresa enviada para outra unidade ou categoria).', 'info')"
+                >i</span>
+              </div>
+
+              <div style="position: relative; flex-grow: 1; min-height: 200px; overflow: visible;">
+                <canvas id="chartFinalizadasPendente"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="grid-container mt-4 grid-gap-20">
+                <div class="table-card table-responsive">
+                    <div class="table-header-highlight">
+                        <h3>1. Funil de Atendimento</h3>
+                    </div>
+                    <table class="preview-table center-table v-lines" id="gridFunil">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Analista</th>
+                                <th>Associadas</th>
+                                <th>Sem<br>Contato</th>
+                                <th>Contato<br>em Andamento</th>
+                                <th>Contatada</th>
+                                <th>Agendada</th>
+                                <th>Prazo<br>Vencido</th>
+                                <th>Prazo Estendido</th>
+                                <th>Lembrete Enviado</th>
+                                <th>Formalizada</th>
+                                <th>Respondida</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="tables-split">
+            <div class="table-card table-responsive">
+              <div class="table-header-highlight">
+                <h3>2. Resumo de OCs</h3>
+              </div>
+              <table class="preview-table center-table v-lines" id="gridOcs">
+                <thead>
+                  <tr>
+                    <th class="text-left">Analista</th>
+                    <th>Iniciada</th>
+                    <th>Em<br />Análise</th>
+                    <th>Rejeitada</th>
+                    <th>Concluída</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="table-card table-responsive">
+              <div class="table-header-highlight">
+                <h3>3. Indicadores de Qualidade</h3>
+              </div>
+              <table
+                class="preview-table center-table v-lines"
+                id="gridPercentuais"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-left">Analista</th>
+                    <th>Trabalho<br />Realizado</th>
+                    <th>Atraso</th>
+                    <th>Respostas<br />+ OCs</th>
+                    <th>Associação</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </main>
+    <script src="vendor/js/jspdf.umd.min.js"></script>
+    <script src="vendor/js/pako.min.js"></script>
+    <script src="js/changelog.js"></script>
+    <script src="js/layout.js"></script>
+
+    <script src="js/bases/cnaes.js"></script>
+    <script src="js/importacao/file_processor.js"></script>
+    <script src="js/importacao/contratos_arquivo.js"></script>
+    <script src="vendor/js/argon2.umd.min.js"></script>
+    <script src="js/importacao/crypto_manager.js"></script>
+    <script src="js/importacao/storage_manager.js"></script>
+    <script src="js/importacao/privacy_manager.js"></script>
+    <script src="js/config_unidade.js"></script>
+
+    <script src="js/config_equipe.js"></script>
+    <script src="js/ocorrencias.js"></script>
+    <script src="js/regras_negocio.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

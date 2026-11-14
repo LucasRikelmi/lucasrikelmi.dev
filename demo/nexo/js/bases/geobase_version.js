@@ -1,0 +1,1 @@
+const DICIONARIO_GeoBase_VERSION = "20260608";

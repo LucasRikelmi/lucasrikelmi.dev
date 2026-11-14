@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controle Operacional | NEXO</title>
+    <meta name="robots" content="noindex, follow">
+    <link
+      href="vendor/css/inter.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="vendor/css/fontawesome-all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+    <style>
+      .toggle-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        background: var(--bg-surface);
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .toggle-btn {
+        flex: 1;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: var(--bg-body);
+        color: var(--text-muted);
+        transition: all 0.3s;
+      }
+      .toggle-btn.active {
+        background: var(--color-primary);
+        color: white;
+      }
+
+      .action-bar {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .action-bar button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+        color: white;
+      }
+      .btn-pdf {
+        background: var(--color-danger);
+      }
+      .btn-map {
+        background: var(--color-success);
+      }
+      .btn-kml {
+        background: #8b5cf6;
+      }
+
+      #grid-visitas th {
+
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: top;
+        min-width: 140px;
+
+        padding: 12px 12px 50px 12px;
+      }
+
+      #grid-visitas th .col-filter-input {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        box-sizing: border-box;
+      }
+
+      .th-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        cursor: pointer;
+        margin-bottom: 8px;
+        gap: 5px;
+      }
+      .th-content i {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        margin-top: 3px;
+      }
+
+      .col-filter-input {
+        width: 100%;
+        padding: 6px;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-body);
+        color: var(--text-main);
+        font-size: 0.85rem;
+      }
+
+      body:not(.dark-mode) .col-filter-input {
+        background: #ffffff;
+        color: #1a1a2e;
+        border-color: #9ca3af;
+      }
+      body:not(.dark-mode) .col-filter-input::placeholder {
+        color: #6b7280;
+      }
+
+      .col-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .col-filter-btn:hover { border-color: var(--color-primary); }
+      .col-filter-btn.ativo { border-color: #4f46e5; background: rgba(79, 70, 229, 0.12); }
+      .col-filter-btn .filtro-label {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.82rem;
+      }
+      .col-filter-btn.ativo .filtro-label { color: #818cf8; font-weight: 600; }
+      .col-filter-btn .filtro-icon { font-size: 0.65rem; color: rgba(255, 255, 255, 0.35); flex-shrink: 0; cursor: pointer; }
+      .col-filter-btn.ativo .filtro-icon { color: #818cf8; }
+      .col-filter-btn .filtro-icon:hover { color: var(--color-primary); }
+      body:not(.dark-mode) .col-filter-btn .filtro-label { color: #6b7280; }
+      body:not(.dark-mode) .col-filter-btn.ativo .filtro-label { color: #4f46e5; font-weight: 600; }
+      body:not(.dark-mode) .col-filter-btn .filtro-icon { color: #9ca3af; }
+      body:not(.dark-mode) .col-filter-btn.ativo .filtro-icon { color: #4f46e5; }
+
+      .col-filter-btn .filtro-inline {
+        flex: 1; min-width: 0; border: none; background: transparent;
+        color: inherit; font-size: 0.82rem; padding: 0; outline: none; cursor: text;
+      }
+      .col-filter-btn .filtro-inline::placeholder { color: rgba(255, 255, 255, 0.4); }
+      .col-filter-btn.ativo .filtro-inline { color: #818cf8; font-weight: 600; }
+      body:not(.dark-mode) .col-filter-btn .filtro-inline { color: #1a1a2e; }
+      body:not(.dark-mode) .col-filter-btn .filtro-inline::placeholder { color: #6b7280; }
+      body:not(.dark-mode) .col-filter-btn.ativo .filtro-inline { color: #4f46e5; }
+
+      #grid-visitas tbody tr {
+        cursor: pointer;
+        transition: background-color 0.1s ease;
+      }
+      #grid-visitas tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+      body.dark-mode #grid-visitas tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.02);
+      }
+
+      #grid-visitas tbody tr.selected {
+        background-color: rgba(79, 70, 229,
+          0.15
+        ) !important;
+      }
+      #grid-visitas tbody tr.selected td {
+        border-color: rgba(79, 70, 229, 0.3);
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: var(--bg-surface);
+        color: var(--text-main);
+        width: 90%;
+        max-width: 800px;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+      }
+
+      .modal-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .modal-tab {
+        padding: 8px 16px;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+      }
+      .modal-tab.active {
+        border-bottom-color: var(--color-primary);
+        color: var(--color-primary);
+      }
+      .modal-body-section {
+        display: none;
+      }
+      .modal-body-section.active {
+        display: block;
+      }
+      .checkbox-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .adv-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      .adv-table th,
+      .adv-table td {
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+        text-align: left;
+      }
+
+      .column-toggle-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 10px;
+      }
+      .column-toggle-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: var(--bg-body);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.9rem;
+      }
+      .column-toggle-item.disabled {
+        opacity: 0.5;
+        border-style: dashed;
+      }
+
+      body.dark-mode select {
+        color-scheme: dark;
+      }
+
+      body.dark-mode select option {
+        background-color: #1e293b;
+        color: #ffffff;
+      }
+
+      .cruz-spinner {
+        width: 44px; height: 44px; margin: 0 auto;
+        border: 4px solid var(--border-color);
+        border-top-color: var(--color-primary);
+        border-radius: 50%;
+        animation: cruz-giro 0.8s linear infinite;
+      }
+      @keyframes cruz-giro { to { transform: rotate(360deg); } }
+      .cruz-progress-bar {
+        width: 220px; height: 8px;
+        background: var(--border-color); border-radius: 4px; margin: 14px auto 0;
+      }
+      .cruz-progress-fill {
+        height: 100%; background: var(--color-primary);
+        border-radius: 4px; transition: width 0.25s;
+      }
+
+      .cruz-cluster-header { background: var(--bg-body); }
+      .cruz-cluster-header:hover { background: rgba(79, 70, 229,0.04); }
+      body.dark-mode .cruz-cluster-header:hover { background: rgba(129, 140, 248,0.06); }
+
+      .cruz-filha-header td,
+      .cruz-filha-header th {
+        background: rgba(79, 70, 229,0.07) !important;
+        border-bottom: 2px solid rgba(79, 70, 229,0.25) !important;
+        font-size: 0.8rem !important;
+        color: var(--color-primary) !important;
+        font-weight: 700 !important;
+        font-style: normal !important;
+        white-space: nowrap;
+      }
+
+      .cruz-filha-row { background: var(--bg-surface) !important; }
+      .cruz-filha-row td { font-size: 0.84rem !important; color: var(--text-muted) !important; }
+      .cruz-filha-row td:first-child {
+        border-left: 3px solid var(--color-primary) !important;
+      }
+
+      .cruz-count-badge {
+        display: inline-block; padding: 3px 12px;
+        background: var(--color-primary); color: white;
+        border-radius: 14px; font-weight: 700; font-size: 1rem;
+      }
+      .cruz-unidade-badge {
+        display: inline-block; padding: 3px 9px; font-size: 0.8rem;
+        background: rgba(79, 70, 229,0.12); color: var(--color-primary);
+        border: 1px solid rgba(79, 70, 229,0.3); border-radius: 4px; font-weight: 600;
+      }
+
+      .btn-expand-n1 {
+        width: 26px; height: 26px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-body); color: var(--text-main);
+        border-radius: 4px; cursor: pointer; font-weight: 700;
+        font-size: 1.1rem; line-height: 1;
+        display: flex; align-items: center; justify-content: center; transition: 0.15s;
+      }
+      .btn-expand-n1:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+      .btn-cruz-action {
+        padding: 5px 10px; font-size: 0.8rem;
+        border: none; border-radius: 4px;
+        background: var(--color-danger); color: white;
+        cursor: pointer; font-weight: 600; transition: 0.15s;
+      }
+      .btn-cruz-action:hover { opacity: 0.82; }
+
+      .cruz-badge-link { color: var(--color-primary); cursor: pointer; font-size: 1rem; }
+      .cruz-badge-link:hover { color: #4338ca; }
+
+      .cruz-vinculo-detalhe-row td { padding: 0 !important; }
+      .cruz-vinculo-detalhe-row:hover td { background: transparent !important; }
+
+      .cruz-n3-bloco { transition: box-shadow 0.2s; }
+      .cruz-n3-bloco:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.1); }
+
+      #grid-visitas td, #grid-visitas th,
+      #placeholder-central td, #placeholder-central th,
+      #placeholder-cruz1 td, #placeholder-cruz1 th,
+      #placeholder-cruz2 td, #placeholder-cruz2 th {
+        text-align: center;
+      }
+
+      #grid-visitas td.text-left,
+      #placeholder-cruz1 td.text-left,
+      #placeholder-cruz2 td.text-left { text-align: left; }
+
+      #placeholder-central td.text-left { text-align: center !important; }
+
+      .cruz-grid th {
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: top;
+        padding: 10px;
+      }
+
+      .cruz-filhas-container > td { background: rgba(79, 70, 229,0.015) !important; }
+</style>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark")
+        document.body.classList.add("dark-mode");
+</script>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Retrair menu">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="index.html" data-tooltip="Início"><i class="fas fa-home"></i> <span>Início</span></a>
+        </li>
+        <li>
+          <a href="dashboard.html" data-tooltip="Dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+          <a href="planejamento.html" data-tooltip="Planejamento"><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a>
+        </li>
+        <li class="active">
+          <a href="controle.html" data-tooltip="Controle"><i class="fas fa-list-check"></i> <span>Controle</span></a>
+        </li>
+        <li>
+          <a href="sincronizacao.html" data-tooltip="Sincronização"><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a>
+        </li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item"><a href="configuracoes.html" data-tooltip="Configurações"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.style.transition = ""; }); });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title"><h2>Controle Operacional</h2></div>
+        <div class="topbar-actions">
+          <button class="icon-btn interativo" id="btnPrivacidade" title="Ativar Modo Privacidade">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="icon-btn interativo" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img
+                src="img/logo-marca.png"
+                class="marca-avatar-img"
+                alt="Logo Meridiano"
+              />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+        <div class="toggle-container">
+          <button
+            class="toggle-btn active"
+            id="btn-visitas"
+            onclick="switchMainToggle('visitas')"
+          >
+            <i class="fas fa-car"></i> Gestão de Visitas
+          </button>
+          <button
+            class="toggle-btn"
+            id="btn-contatos"
+            onclick="switchMainToggle('contatos')"
+          >
+            <i class="fas fa-address-book"></i> Contatos
+          </button>
+        </div>
+
+        <section id="sec-visitas" style="display: block">
+          <div
+            class="table-card"
+            style="
+              margin-top: 15px;
+              background: var(--bg-surface);
+              padding: 0;
+              border-radius: 8px;
+              overflow: hidden;
+            "
+          >
+            <div
+              class="table-header-highlight"
+              style="border-radius: 8px 8px 0 0; margin-bottom: 0"
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  flex-wrap: wrap;
+                "
+              >
+                <div style="min-width: 0">
+                  <h3 style="margin: 0">
+                    <i class="fas fa-table"></i> Carteira de Empresas
+                  </h3>
+                  <small
+                    >Clique para selecionar · SHIFT para seleção em massa</small
+                  >
+                </div>
+
+                <span style="width: 22px; flex-shrink: 0"></span>
+
+                <button class="hdr-action-btn grande acc-vermelho" onclick="openPdfModal()">
+                  <i class="fas fa-file-pdf"></i> Gerar Documentos
+                </button>
+                <button class="hdr-action-btn grande acc-verde" onclick="abrirModalKml()">
+                  <i class="fas fa-map-marked-alt"></i> Gerar Arquivo .KML
+                </button>
+                <button
+                  id="btnLimparFiltros"
+                  class="hdr-action-btn grande danger"
+                  style="display: none"
+                  onclick="limparTodosFiltros()"
+                >
+                  <i class="fas fa-times"></i> Limpar Filtros
+                </button>
+                <button class="hdr-action-btn grande acc-cinza" onclick="limparSelecao()">
+                  <i class="fas fa-eraser"></i> Limpar Seleção
+                </button>
+
+                <span style="flex: 1; min-width: 8px"></span>
+
+                <span
+                  id="badge-selecao"
+                  title="Clique para ver/editar as empresas selecionadas"
+                  onclick="openSelecaoModal()"
+                  style="display:none; background: var(--color-primary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.88rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 10px rgba(79, 70, 229,0.45); border: 1px solid rgba(255,255,255,0.3); letter-spacing: 0.3px; cursor: pointer;"
+                ></span>
+                <button
+                  onclick="exportarGridCSV()"
+                  style="
+                    background: rgba(255, 255, 255, 0.18);
+                    color: white;
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                  "
+                >
+                  <i class="fas fa-file-csv"></i> CSV
+                </button>
+                <button
+                  onclick="exportarGridPDF()"
+                  style="
+                    background: rgba(255, 255, 255, 0.18);
+                    color: white;
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                  "
+                >
+                  <i class="fas fa-file-pdf"></i> PDF
+                </button>
+                <button
+                  onclick="openColumnModal()"
+                  style="
+                    background: rgba(255, 255, 255, 0.18);
+                    color: white;
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                  "
+                >
+                  <i class="fas fa-columns"></i> Colunas
+                </button>
+              </div>
+            </div>
+            <div style="overflow: auto; max-height: calc(100vh - 250px)">
+              <table
+                class="preview-table v-lines"
+                id="grid-visitas"
+                style="width: 100%"
+              >
+                <thead id="thead-visitas"></thead>
+                <tbody id="tbody-visitas"></tbody>
+              </table>
+            </div>
+            <div id="paginacao-visitas"></div>
+          </div>
+        </section>
+
+        <section id="sec-contatos" style="display: none">
+          <div
+            class="toggle-container"
+            style="background: var(--bg-body); padding: 0"
+          >
+            <button
+              class="toggle-btn active"
+              style="font-size: 0.9rem; padding: 10px"
+              onclick="switchSubToggle(this, 'placeholder-central')"
+            >
+              <i class="fas fa-building"></i> Contato via Representante
+            </button>
+            <button
+              class="toggle-btn"
+              style="font-size: 0.9rem; padding: 10px"
+              onclick="switchSubToggle(this, 'placeholder-cruz1')"
+            >
+              <i class="fas fa-search"></i> Busca de vínculos
+            </button>
+          </div>
+
+          <div class="sync-card" id="placeholder-central">
+            <h3>Contato via Representante</h3>
+            <p class="text-muted">
+              Placeholder: Grid de aglomeração por empresa representante e
+              holdings.
+            </p>
+          </div>
+          <div class="sync-card" id="placeholder-cruz1" style="display: none">
+            <h3>Busca de vínculos</h3>
+            <p class="text-muted">
+              Placeholder: Informações rápidas de contato na web.
+            </p>
+          </div>
+
+          <div id="placeholder-cruz2" style="display: none"></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="modal-overlay" id="columnModal">
+      <div class="modal-content" style="max-width: 800px">
+        <div class="modal-header">
+          <h3>
+            <i class="fas fa-columns" style="color: var(--color-primary)"></i>
+            Colunas Disponíveis no Relatório
+          </h3>
+          <button class="btn-icon" onclick="closeColumnModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <p class="text-muted">
+          Selecione quais colunas deseja visualizar na grid principal.
+        </p>
+
+        <div class="column-toggle-list" id="modal-col-list"></div>
+
+        <div style="margin-top: 25px; display: flex; justify-content: flex-end">
+          <button
+            style="
+              padding: 10px 20px;
+              background: var(--color-primary);
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: bold;
+            "
+            onclick="closeColumnModal()"
+          >
+            Aplicar e Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="selecaoModal">
+      <div class="modal-content" style="max-width: 520px">
+        <div class="modal-header">
+          <h3>
+            <i class="fas fa-list-check" style="color: var(--color-primary)"></i>
+            Empresas Selecionadas
+          </h3>
+          <button class="btn-icon" onclick="closeSelecaoModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div id="selecaoModalLista" style="max-height: 55vh; overflow-y: auto;"></div>
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <button
+            style="background: none; border: none; color: var(--color-danger); cursor: pointer; font-size: 0.85rem; font-weight: 600;"
+            onclick="limparSelecao(); renderizarSelecaoModal();"
+          >
+            <i class="fas fa-eraser"></i> Limpar toda a seleção
+          </button>
+          <button
+            style="padding: 8px 18px; background: var(--color-primary); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;"
+            onclick="closeSelecaoModal()"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="pdfModal">
+      <div class="modal-content" style="max-width:1000px;">
+        <div class="modal-header">
+          <h3>
+            <i class="fas fa-file-pdf" style="color: var(--color-danger)"></i>
+            Geração de Documentos em Lote
+          </h3>
+          <button class="btn-icon" onclick="closePdfModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-tabs">
+          <div
+            class="modal-tab active"
+            onclick="switchModalTab('simples', this)"
+          >
+            Modo Simples
+          </div>
+          <div class="modal-tab" onclick="switchModalTab('avancado', this)">
+            Modo Avançado
+          </div>
+        </div>
+        <div id="tab-simples" class="modal-body-section active">
+          <p>
+            Configuração única para as
+            <strong id="qtd-selecionadas">0</strong> empresas selecionadas.
+          </p>
+          <label style="display: block; margin-top: 15px; font-weight: bold"
+            >Selecione a Carta Base:</label
+          >
+          <select
+            id="selCartaGlobal"
+            onchange="_atualizarEstadoData()"
+            style="
+              width: 100%;
+              padding: 10px;
+              margin-top: 5px;
+              border-radius: 5px;
+              border: 1px solid var(--border-color);
+              background: var(--bg-body);
+              color: var(--text-main);
+            "
+          >
+            <option value="apresentacao">Convite de participação</option>
+            <option value="cobranca">Lembrete de envio</option>
+            <option value="notificacao">Comunicado formal</option>
+          </select>
+          <div
+            class="form-group"
+            style="
+              margin-bottom: 15px;
+              padding: 10px;
+              background: var(--bg-main);
+              border-radius: 6px;
+            "
+          >
+            <label
+              for="pdfDataLimiteGlobal"
+              style="
+                font-weight: 600;
+                display: block;
+                margin-bottom: 6px;
+                color: var(--text-main);
+              "
+            >
+              📅 Prazo de Resposta / Data Limite (Todas as Cartas):
+            </label>
+            <input
+              type="date"
+              id="pdfDataLimiteGlobal"
+              class="form-control"
+              style="
+                width: 100%;
+                padding: 8px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                background: var(--bg-surface);
+                color: var(--text-main);
+              "
+            />
+          </div>
+
+          <div class="checkbox-group">
+            <label
+              ><input type="checkbox" checked /> + Incluir Termo de Confidencialidade</label
+            >
+            <label
+              ><input type="checkbox" id="pdfIncluirRecibo" checked /> + Incluir
+              Recibo de Entrega</label
+            >
+          </div>
+        </div>
+        <div id="tab-avancado" class="modal-body-section">
+          <div style="max-height: 250px; overflow-y: auto">
+            <table class="adv-table" id="adv-empresas-list">
+              <thead
+                style="position: sticky; top: 0; background: var(--bg-surface)"
+              >
+                <tr>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                    "
+                  >
+                    Empresa
+                  </th>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                    "
+                  >
+                    Modelo de Carta
+                  </th>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                    "
+                  >
+                    Prazo (Data)
+                  </th>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                    "
+                  >
+                    Incluir Termo
+                  </th>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                    "
+                  >
+                    Incluir Recibo
+                  </th>
+                  <th
+                    style="
+                      padding: 10px;
+                      border-bottom: 2px solid var(--border-color);
+                      width: 42px;
+                    "
+                  ></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          style="
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <div style="display: flex; gap: 10px">
+            <button
+              style="
+                padding: 10px 15px;
+                background: var(--color-primary);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+              "
+              onclick="abrirLinksRFB()"
+            >
+              <i class="fas fa-building"></i> Consultar CNPJs (RFB)
+            </button>
+            <button
+              type="button"
+              class="btn-sm interativo nexo-modal-btn-secondary"
+              onclick="gerarSomenteTermo()"
+            >
+              <i class="fas fa-file-shield"></i> Imprimir somente o Termo de Confidencialidade
+            </button>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button
+              style="
+                padding: 10px 20px;
+                background: var(--color-danger);
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                font-weight: bold;
+              "
+              onclick="closePdfModal()"
+            >
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button
+              id="btnGerarPdf"
+              style="
+                padding: 10px 20px;
+                background: var(--color-primary);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+              "
+              onclick="iniciarGeracao()"
+            >
+              <i class="fas fa-print"></i> Gerar PDF Consolidado
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="modalKml"
+      class="modal-overlay"
+      style="display: none; z-index: 9999"
+    >
+      <div
+        class="modal-content"
+        style="max-width: 600px; max-height: 90vh; overflow-y: auto"
+      >
+        <div class="modal-header">
+          <h2>
+            <i class="fas fa-map-marked-alt" style="color: #005a9c"></i>
+            Configurar Rotas (KML)
+          </h2>
+          <button class="btn-close" onclick="fecharModalKml()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p style="margin-bottom: 15px; color: var(--text-muted)">
+            Selecione os dados que deseja incluir no balão informativo de cada
+            empresa no mapa.
+          </p>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 20px;
+              margin-bottom: 20px;
+            "
+          >
+            <div
+              style="
+                background: var(--bg-body);
+                padding: 15px;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+              "
+            >
+              <h4 style="margin-bottom: 10px; color: var(--text-main)">
+                <i class="fas fa-building"></i> Perfil da Empresa
+              </h4>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  font-size: 0.9rem;
+                "
+              >
+                <label
+                  ><input type="checkbox" id="chkKmlNomeFantasia" checked /> Nome
+                  Fantasia</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlCategoria" checked />
+                  Categoria</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlEmpresaNova" checked /> Empresa
+                  Nova</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlVip" /> Prioritária</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlCnae" /> Código CNAE</label
+                >
+              </div>
+            </div>
+
+            <div
+              style="
+                background: var(--bg-body);
+                padding: 15px;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+              "
+            >
+              <h4 style="margin-bottom: 10px; color: var(--text-main)">
+                <i class="fas fa-address-book"></i> Contatos e Operação
+              </h4>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  font-size: 0.9rem;
+                "
+              >
+                <label
+                  ><input type="checkbox" id="chkKmlContato" /> Nome do
+                  Contato</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlTelefone" />
+                  Telefones e E-mail</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlRepresentante" /> Dados do
+                  Representante</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlStatus" /> Status da
+                  Empresa</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlOc" /> Resumo OC</label
+                >
+                <label
+                  ><input type="checkbox" id="chkKmlAnalistas" /> Analistas
+                  Responsáveis</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h4 style="margin-bottom: 10px">
+              Precisão Geográfica — Status a Exportar
+            </h4>
+
+            <select
+              id="selKmlQualidade"
+              onchange="aplicarPresetKmlStatus(this.value)"
+              style="
+                width: 100%;
+                padding: 10px;
+                border-radius: 4px;
+                border: 1px solid var(--border-color);
+                background: var(--bg-surface);
+                color: var(--text-main);
+              "
+            >
+              <option value="tudo">🟢🔵🟡🟠🟣 Preset — Mostrar Tudo</option>
+              <option value="confiavel">
+                🟢🔵🟡🟣 Preset — Apenas Ruas Confiáveis (sem Laranja)
+              </option>
+              <option value="exato">
+                🟢🔵🟣 Preset — Apenas Quadras/Lotes Exatos (Azul e Verde)
+              </option>
+              <option value="custom">Preset — Personalizado</option>
+              <option disabled>──────────</option>
+              <option value="rev-laranja">
+                🟠 Revisão — Apenas Laranja (confiança baixa)
+              </option>
+              <option value="rev-amarelo">
+                🟡🟠 Revisão — Amarelo + Laranja (casos a conferir)
+              </option>
+            </select>
+
+            <div
+              style="
+                margin-top: 12px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px 16px;
+                font-size: 0.9rem;
+              "
+            >
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input
+                  type="checkbox"
+                  id="chkStatusVerde"
+                  onchange="marcarKmlStatusCustom()"
+                  checked
+                />
+                <i class="fas fa-location-dot" style="color: #34a853"></i>
+                Muito Bom — Lote/Nº (Verde)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input
+                  type="checkbox"
+                  id="chkStatusAzul"
+                  onchange="marcarKmlStatusCustom()"
+                  checked
+                />
+                <i class="fas fa-location-dot" style="color: #29b6f6"></i>
+                Bom — Via + Quadra (Azul)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input
+                  type="checkbox"
+                  id="chkStatusAmarelo"
+                  onchange="marcarKmlStatusCustom()"
+                  checked
+                />
+                <i class="fas fa-location-dot" style="color: #fbc02d"></i>
+                Regular — Eixo/CEP (Amarelo)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input
+                  type="checkbox"
+                  id="chkStatusLaranja"
+                  onchange="marcarKmlStatusCustom()"
+                />
+                <i class="fas fa-location-dot" style="color: #ff9800"></i>
+                Ruim — Via similar (Laranja)
+              </label>
+              <label style="display: flex; align-items: center; gap: 8px">
+                <input
+                  type="checkbox"
+                  id="chkStatusRoxo"
+                  onchange="marcarKmlStatusCustom()"
+                  checked
+                />
+                <i class="fas fa-location-dot" style="color: #9c27b0"></i>
+                Validado — Loc. Confirmada (Roxo)
+              </label>
+            </div>
+
+            <div
+              style="
+                margin-top: 15px;
+                padding: 12px 15px;
+                background: rgba(156, 39, 176, 0.15);
+                border-left: 4px solid #9c27b0;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <i
+                class="fas fa-map-pin"
+                style="color: #9c27b0; font-size: 1.2rem"
+              ></i>
+              <span
+                style="
+                  color: var(--text-main);
+                  font-weight: 500;
+                  font-size: 0.9rem;
+                "
+              >
+                As empresas das Localizações Confirmadas recebem o
+                marcador <b style="color: #9c27b0">Roxo</b>. Desmarque
+                <b>Validado — Loc. Confirmada</b> acima para excluí-las da exportação.
+              </span>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 15px;
+              margin-bottom: 30px;
+              padding: 15px;
+              background: var(--bg-surface);
+              border-radius: 6px;
+              border: 2px dashed #005a9c;
+            "
+          >
+            <label
+              style="
+                font-weight: bold;
+                color: #005a9c;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              "
+            >
+              <input
+                type="checkbox"
+                id="chkKmlRelatorio"
+                checked
+                style="width: 18px; height: 18px"
+              />
+              Gerar Relatórios de Auditoria Geográfica (CSV e PDF)
+            </label>
+            <p
+              style="
+                margin: 5px 0 0 26px;
+                font-size: 0.85rem;
+                color: var(--text-muted);
+              "
+            >
+              Inclui no arquivo .ZIP planilhas e PDFs detalhando a fonte e a
+              qualidade da coordenada de cada empresa.
+            </p>
+          </div>
+        </div>
+        <div
+          class="modal-footer"
+          style="display: flex; justify-content: flex-end; gap: 10px"
+        >
+          <button
+            class="btn-secondary"
+            onclick="fecharModalKml()"
+            style="
+              padding: 10px 15px;
+              border-radius: 4px;
+              cursor: pointer;
+              background: #dc3545;
+              color: white;
+              border: none;
+              font-weight: bold;
+            "
+          >
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button
+            id="btnExecutarKml"
+            class="btn-primary"
+            onclick="executarGeracaoKml()"
+            style="
+              padding: 10px 15px;
+              background: #005a9c;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              font-weight: bold;
+              cursor: pointer;
+            "
+          >
+            <i class="fas fa-download"></i> Gerar e Baixar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/assets/LOGO_MARCA_B64.js"></script>
+    <script src="js/assets/ASSINATURA_INLINE_B64.js"></script>
+    <script src="js/assets/ASSINATURA_DIRETOR_B64.js"></script>
+    <script src="vendor/js/jspdf.umd.min.js"></script>
+    <script src="vendor/js/jszip.min.js"></script>
+    <script src="vendor/js/pako.min.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/importacao/file_processor.js"></script>
+    <script src="js/importacao/contratos_arquivo.js"></script>
+    <script src="vendor/js/argon2.umd.min.js"></script>
+    <script src="js/importacao/crypto_manager.js"></script>
+    <script src="js/importacao/storage_manager.js"></script>
+    <script src="js/importacao/privacy_manager.js"></script>
+    <script src="js/changelog.js"></script>
+
+    <script src="js/config_equipe.js"></script>
+    <script src="js/ocorrencias.js"></script>
+    <script src="js/regras_negocio.js"></script>
+    <script src="js/contatos/cruz_normalize.js"></script>
+    <script src="js/contatos/cruz_engine.js"></script>
+    <script src="js/assets/assets_b64.js"></script>
+    <script src="js/bases/cnaes.js"></script>
+
+    <script src="js/config_unidade.js"></script>
+
+    <div class="modal-overlay" id="_nexo-confirm-modal" style="display:none;z-index:99999;">
+      <div class="modal-content" style="max-width:500px;">
+        <div class="modal-header" style="padding-bottom:14px;border-bottom:1px solid var(--border-color);">
+          <h3 style="display:flex;align-items:center;gap:12px;font-size:1rem;font-weight:700;">
+            <i id="_nexo-confirm-icon" class="fas fa-exclamation-triangle" style="font-size:1.4rem;"></i>
+            <span id="_nexo-confirm-title-text">Atencao</span>
+          </h3>
+        </div>
+        <div id="_nexo-confirm-body" style="padding:18px 0 8px;line-height:1.7;font-size:0.92rem;white-space:pre-line;color:var(--text-main);"></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:16px;border-top:1px solid var(--border-color);margin-top:10px;">
+          <button id="_nexo-confirm-nao"
+            style="padding:9px 22px;background:transparent;border:1px solid var(--border-color);color:var(--text-main);border-radius:5px;cursor:pointer;font-weight:600;font-size:0.88rem;">
+            Cancelar
+          </button>
+          <button id="_nexo-confirm-sim"
+            style="padding:9px 22px;background:var(--color-primary);color:white;border:none;border-radius:5px;cursor:pointer;font-weight:600;font-size:0.88rem;">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dropdown-filtro" class="dropdown-filtro-panel" style="display:none;"></div>
+
+    <script src="js/configuracoes.js"></script>
+    <script src="js/controle.js"></script>
+    <script src="js/contatos/contatos_ui.js"></script>
+    <script src="js/pdf_engine.js"></script>
+    <script src="js/documentos.js"></script>
+
+    <script src="js/bases/municipios_br.js"></script>
+    <script src="js/geo_core.js"></script>
+    <script src="js/map_engine.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

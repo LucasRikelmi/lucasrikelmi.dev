@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurações | NEXO</title>
+    <meta name="robots" content="noindex, follow">
+    <link href="vendor/css/inter.css" rel="stylesheet" />
+    <link rel="stylesheet" href="vendor/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+    <style>
+      .cfg-section {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 1.25rem;
+        overflow: hidden;
+      }
+      .cfg-section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-main);
+      }
+      .cfg-section-header i {
+        font-size: 1rem;
+        color: var(--color-primary);
+        width: 18px;
+        text-align: center;
+      }
+      .cfg-section-header h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0;
+      }
+      .cfg-section-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0;
+        margin-left: auto;
+      }
+      .cfg-body {
+        padding: 1.25rem;
+      }
+
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+      .toggle-row-text { display: flex; flex-direction: column; gap: 2px; }
+      .toggle-row-text strong { font-size: 0.88rem; color: var(--text-main); }
+      .toggle-row-text small { font-size: 0.76rem; color: var(--text-muted); }
+      .nexo-toggle {
+        position: relative; width: 42px; height: 22px;
+        -webkit-appearance: none; appearance: none;
+        background: var(--border-color); border-radius: 999px; cursor: pointer;
+        transition: background 0.2s; flex-shrink: 0;
+      }
+      .nexo-toggle::after {
+        content: ""; position: absolute;
+        top: 3px; left: 3px; width: 16px; height: 16px;
+        background: white; border-radius: 50%; transition: left 0.2s;
+      }
+      .nexo-toggle:checked { background: var(--color-primary); }
+      .nexo-toggle:checked::after { left: 23px; }
+
+      .cfg-action-bar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 1.25rem 0 0.25rem;
+        border-top: 1px solid var(--border-color);
+        margin-top: 0.25rem;
+      }
+      .btn-cfg-save {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 22px;
+        background: var(--color-primary); color: white;
+        border: none; border-radius: 7px; font-size: 0.88rem;
+        font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+      }
+      .btn-cfg-save:hover { opacity: 0.88; }
+      .btn-cfg-secondary {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 18px;
+        background: var(--bg-main); color: var(--text-main);
+        border: 1px solid var(--border-color); border-radius: 7px;
+        font-size: 0.88rem; font-weight: 500; cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-cfg-secondary:hover { background: var(--border-color); }
+      .btn-cfg-danger {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 10px 18px;
+        background: transparent; color: var(--color-danger);
+        border: 1px solid var(--color-danger); border-radius: 7px;
+        font-size: 0.88rem; font-weight: 500; cursor: pointer;
+        transition: background 0.15s; margin-left: auto;
+      }
+      .btn-cfg-danger:hover { background: rgba(239,68,68,0.08); }
+
+      .config-creditos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+      .config-credito-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        padding: 1.25rem 1rem;
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+      }
+      .config-credito-icone {
+        font-size: 1.4rem;
+        color: var(--color-primary);
+        margin-bottom: 4px;
+      }
+      .config-credito-papel {
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+      }
+      .config-credito-nome {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--text-main);
+      }
+      .config-credito-rodape {
+        text-align: center;
+        margin: 1.5rem 0 0;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+</style>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+</script>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Retrair menu">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-tooltip="Início"><i class="fas fa-home"></i> <span>Início</span></a></li>
+        <li><a href="dashboard.html" data-tooltip="Dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a></li>
+        <li><a href="planejamento.html" data-tooltip="Planejamento"><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a></li>
+        <li><a href="controle.html" data-tooltip="Controle"><i class="fas fa-list-check"></i> <span>Controle</span></a></li>
+        <li><a href="sincronizacao.html" data-tooltip="Sincronização"><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a></li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item active"><a href="configuracoes.html" data-tooltip="Configurações"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.style.transition = ""; }); });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title"><h2>Configurações</h2></div>
+        <div class="topbar-actions">
+          <button class="icon-btn interativo" id="themeToggle"><i class="fas fa-moon"></i></button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img src="img/logo-marca.png" class="marca-avatar-img" alt="Logo Meridiano" />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+
+        <div class="config-tabs" id="cfgTabs">
+          <button type="button" class="config-tab-btn interativo active" data-aba="geral"><i class="fas fa-building"></i> Geral</button>
+          <button type="button" class="config-tab-btn interativo" data-aba="equipe"><i class="fas fa-users"></i> Equipe</button>
+          <button type="button" class="config-tab-btn interativo" data-aba="geolocalizacao"><i class="fas fa-map-location-dot"></i> Geolocalização</button>
+          <button type="button" class="config-tab-btn interativo" data-aba="planejamento"><i class="fas fa-calendar-days"></i> Planejamento</button>
+          <button type="button" class="config-tab-btn interativo" data-aba="exportar"><i class="fas fa-right-left"></i> Exportar/Importar</button>
+          <button type="button" class="config-tab-btn interativo" data-aba="sobre"><i class="fas fa-circle-info"></i> Sobre</button>
+        </div>
+
+        <div id="painelGeral" class="cfg-tab-panel">
+
+        <div class="cfg-section">
+          <div class="cfg-section-header">
+            <i class="fas fa-building"></i>
+            <h3>Identificação da Unidade</h3>
+            <p>Usado no nome dos arquivos exportados e no cabeçalho/rodapé de cartas, recibos e PDFs</p>
+          </div>
+          <div class="cfg-body" id="painelDadosUnidade"></div>
+        </div>
+
+        <div class="cfg-section">
+          <div class="cfg-section-header">
+            <i class="fas fa-file-export"></i>
+            <h3>Exportação</h3>
+            <p>Preferências para arquivos gerados</p>
+          </div>
+          <div class="cfg-body">
+            <div class="toggle-row">
+              <div class="toggle-row-text">
+                <strong>Incluir nome da unidade nos arquivos</strong>
+                <small>Ex.: <code>NEXO_Visitas_CentroOeste_14-09-2026_5emp.pdf</code></small>
+              </div>
+              <input type="checkbox" id="cfg-incluir-unidade-arquivo" class="nexo-toggle" checked />
+            </div>
+          </div>
+        </div>
+
+        <div class="cfg-action-bar">
+          <button class="btn-cfg-save" onclick="salvarConfiguracoes()">
+            <i class="fas fa-save"></i> Salvar preferências de exportação
+          </button>
+        </div>
+
+        </div>
+
+        <div id="painelEquipe" class="cfg-tab-panel" hidden>
+          <div class="cfg-section">
+            <div class="cfg-section-header">
+              <i class="fas fa-users"></i>
+              <h3>Equipe</h3>
+              <p>Quadro de analistas usado no Controle, Dashboard e Planejamento</p>
+            </div>
+            <div class="cfg-body" id="painelConteudoEquipe"></div>
+          </div>
+        </div>
+
+        <div id="painelGeolocalizacao" class="cfg-tab-panel" hidden>
+          <div class="cfg-section">
+            <div class="cfg-section-header">
+              <i class="fas fa-map-location-dot"></i>
+              <h3>Geolocalização</h3>
+              <p>GeoBase — coordenadas aproximadas para o KML</p>
+            </div>
+            <div class="cfg-body" id="painelConteudoGeolocalizacao"></div>
+          </div>
+        </div>
+
+        <div id="painelPlanejamento" class="cfg-tab-panel" hidden>
+          <div class="cfg-section">
+            <div class="cfg-section-header">
+              <i class="fas fa-calendar-days"></i>
+              <h3>Planejamento</h3>
+              <p>Prazos finais e feriados usados no cálculo de metas</p>
+            </div>
+            <div class="cfg-body" id="painelConteudoPlanejamento"></div>
+          </div>
+        </div>
+
+        <div id="painelExportar" class="cfg-tab-panel" hidden>
+          <div class="cfg-section">
+            <div class="cfg-section-header">
+              <i class="fas fa-right-left"></i>
+              <h3>Exportar/Importar</h3>
+              <p>Compartilhe a configuração desta unidade com colegas</p>
+            </div>
+            <div class="cfg-body" id="painelConteudoExportar"></div>
+          </div>
+        </div>
+
+        <div id="painelSobre" class="cfg-tab-panel" hidden>
+          <div class="cfg-section">
+            <div class="cfg-section-header">
+              <i class="fas fa-circle-info"></i>
+              <h3>Sobre o NEXO</h3>
+              <p>Quem construiu este sistema</p>
+            </div>
+            <div class="cfg-body">
+              <div class="config-creditos-grid">
+                <div class="config-credito-card">
+                  <i class="fas fa-code config-credito-icone"></i>
+                  <span class="config-credito-papel">Desenvolvimento</span>
+                  <span class="config-credito-nome">Lucas Rikelmi Macedo da Silva</span>
+                </div>
+                <div class="config-credito-card">
+                  <i class="fas fa-robot config-credito-icone"></i>
+                  <span class="config-credito-papel">Apoio de IA</span>
+                  <span class="config-credito-nome">Claude (Anthropic)</span>
+                </div>
+              </div>
+              <p class="config-credito-rodape">Projeto de portfólio · Lucas Rikelmi</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="vendor/js/pako.min.js"></script>
+    <script src="vendor/js/jspdf.umd.min.js"></script>
+    <script src="js/importacao/contratos_arquivo.js"></script>
+    <script src="vendor/js/argon2.umd.min.js"></script>
+    <script src="js/importacao/crypto_manager.js"></script>
+    <script src="js/importacao/storage_manager.js"></script>
+    <script src="js/importacao/file_processor.js"></script>
+    <script src="js/config_unidade.js"></script>
+    <script src="js/config_equipe.js"></script>
+    <script src="js/config_planejamento.js"></script>
+    <script src="js/bases/municipios_br.js"></script>
+    <script src="js/geo_core.js"></script>
+    <script src="js/geobase_etl.js"></script>
+
+    <script src="js/map_engine.js"></script>
+    <script src="js/bases/cnaes.js"></script>
+    <script src="js/assets/LOGO_MARCA_B64.js"></script>
+    <script src="js/assets/ASSINATURA_INLINE_B64.js"></script>
+    <script src="js/assets/ASSINATURA_DIRETOR_B64.js"></script>
+    <script src="js/assets/assets_b64.js"></script>
+
+    <script src="js/pdf_engine.js"></script>
+    <script src="js/documentos.js"></script>
+    <script src="js/changelog.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/configuracoes.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

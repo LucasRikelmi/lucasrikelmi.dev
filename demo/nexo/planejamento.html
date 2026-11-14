@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planejamento | NEXO</title>
+    <meta name="robots" content="noindex, follow">
+    <link
+      href="vendor/css/inter.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="vendor/css/fontawesome-all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+</script>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Retrair menu">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="index.html" data-tooltip="Início"><i class="fas fa-home"></i> <span>Início</span></a>
+        </li>
+        <li>
+          <a href="dashboard.html" data-tooltip="Dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+        </li>
+        <li class="active">
+          <a href="planejamento.html" data-tooltip="Planejamento"><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a>
+        </li>
+        <li>
+          <a href="controle.html" data-tooltip="Controle"><i class="fas fa-list-check"></i> <span>Controle</span></a>
+        </li>
+        <li>
+          <a href="sincronizacao.html" data-tooltip="Sincronização"><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a>
+        </li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item"><a href="configuracoes.html" data-tooltip="Configurações"><i class="fas fa-cog"></i> <span>Configurações</span></a></li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () { requestAnimationFrame(function () { s.style.transition = ""; }); });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title"><h2>Planejamento Estratégico</h2></div>
+        <div class="topbar-actions">
+          <button class="icon-btn interativo" id="btnPrivacidade" title="Ativar Modo Privacidade">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="icon-btn interativo" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img
+                src="img/logo-marca.png"
+                class="marca-avatar-img"
+                alt="Logo Meridiano"
+              />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+        <div
+          class="chart-card mb-15"
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+            justify-content: space-between;
+          "
+        >
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label
+              class="text-muted"
+              style="font-size: 0.8rem; font-weight: 600"
+              >Filtrar Análise</label
+            >
+            <select id="filterPlanejamento" class="modern-select interativo">
+
+              <option value="UNIDADE">Visão Geral (Unidade)</option>
+            </select>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              align-items: center;
+              border-left: 2px solid var(--border-color);
+              padding-left: 15px;
+            "
+          >
+            <button id="btnFocoAcordos" class="btn-toggle active interativo">
+              <i class="fas fa-handshake"></i> Acordos
+            </button>
+            <button id="btnFocoRespostas" class="btn-toggle interativo">
+              <i class="fas fa-check-double"></i> Respostas
+            </button>
+            <label
+              style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                font-weight: 500;
+                margin-left: 10px;
+              "
+              class="text-muted"
+            >
+              <input
+                type="checkbox"
+                id="checkContatos"
+                style="
+                  accent-color: var(--color-primary);
+                  transform: scale(1.2);
+                "
+              />
+              + Considerar Contatadas
+            </label>
+          </div>
+        </div>
+
+        <div class="charts-grid mb-15">
+          <div class="chart-card">
+            <div class="flex-between">
+              <div class="table-header-highlight" style="margin-bottom: 0">
+                <h3>
+                  <i class="fas fa-chart-line" style="margin-right: 8px"></i>
+                  Tendência: Realizado vs Previsto
+                </h3>
+              </div>
+            </div>
+            <div class="canvas-container-lg">
+              <canvas id="chartTendencia"></canvas>
+            </div>
+          </div>
+
+          <div class="plan-metrics-container">
+            <div
+              class="kpi-card highlight-blue"
+              style="
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+                height: 100%;
+              "
+            >
+              <h4
+                class="text-muted"
+                style="font-size: 0.75rem; text-transform: uppercase"
+              >
+                Velocidade Atual
+              </h4>
+              <h2 id="kpiVelocidade" style="font-size: 2rem; margin: 5px 0">
+                --
+                <span style="font-size: 1rem; color: var(--text-muted)"
+                  >/dia</span
+                >
+              </h2>
+            </div>
+
+            <div
+              class="kpi-card highlight-red"
+              id="cardCatchup"
+              style="
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+                height: 100%;
+              "
+            >
+              <h4
+                class="text-muted"
+                style="font-size: 0.75rem; text-transform: uppercase"
+              >
+                Catch-up Necessário
+              </h4>
+              <h2
+                id="kpiCatchup"
+                style="
+                  font-size: 2rem;
+                  margin: 5px 0;
+                  color: var(--color-danger);
+                "
+              >
+                --
+                <span style="font-size: 1rem; color: var(--text-muted)"
+                  >/dia</span
+                >
+              </h2>
+              <small
+                id="alertaRisco"
+                style="
+                  color: var(--color-danger);
+                  font-weight: 600;
+                  font-size: 0.7rem;
+                  display: none;
+                "
+              >
+                <i class="fas fa-exclamation-triangle"></i> Risco Crítico
+              </small>
+            </div>
+
+            <div
+              class="kpi-card highlight-green"
+              style="
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+                height: 100%;
+              "
+            >
+              <h4
+                class="text-muted"
+                style="font-size: 0.75rem; text-transform: uppercase"
+              >
+                Projeção Fim de Mês
+              </h4>
+              <h2
+                id="kpiProjecao"
+                style="
+                  font-size: 2rem;
+                  margin: 5px 0;
+                  color: var(--color-success);
+                "
+              >
+                --
+                <span style="font-size: 1rem; color: var(--text-muted)"
+                  >entregas</span
+                >
+              </h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="flex-between">
+            <div class="table-header-highlight" style="margin-bottom: 0">
+              <h3>
+                <i class="fas fa-calendar-check" style="margin-right: 8px"></i>
+                Calendário de Produtividade (Heatmap)
+              </h3>
+            </div>
+            <div
+              id="mediaPeriodoBox"
+              style="
+                background: var(--bg-main);
+                padding: 8px 15px;
+                border-radius: 6px;
+                border: 1px solid var(--border-color);
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--color-primary);
+                display: none;
+              "
+            >
+              Média Selecionada: <span id="valorMediaPeriodo">--</span> / dia
+            </div>
+          </div>
+
+          <div class="calendar-grid" id="gridCalendario"></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="vendor/js/chart.umd.min.js"></script>
+    <script src="vendor/js/chartjs-plugin-datalabels.min.js"></script>
+
+    <script src="vendor/js/pako.min.js"></script>
+    <script src="js/importacao/file_processor.js"></script>
+    <script src="js/importacao/contratos_arquivo.js"></script>
+    <script src="vendor/js/argon2.umd.min.js"></script>
+    <script src="js/importacao/crypto_manager.js"></script>
+    <script src="js/importacao/storage_manager.js"></script>
+    <script src="js/importacao/privacy_manager.js"></script>
+    <script src="js/config_unidade.js"></script>
+
+    <script src="js/config_planejamento.js"></script>
+    <script src="js/changelog.js"></script>
+
+    <script src="js/config_equipe.js"></script>
+    <script src="js/ocorrencias.js"></script>
+    <script src="js/regras_negocio.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/planejamento.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Início | NEXO</title>
+    <meta name="description" content="Demo navegável do NEXO: gestão de operações de campo 100% no navegador, com dados cifrados, PDFs e mapas. Dados fictícios.">
+    <link rel="canonical" href="https://lucasrikelmi.dev/demo/nexo/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lucas Rikelmi">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="https://lucasrikelmi.dev/demo/nexo/">
+    <meta property="og:title" content="NEXO (demo) | Lucas Rikelmi">
+    <meta property="og:description" content="Demo navegável do NEXO: gestão de operações de campo 100% no navegador, com dados cifrados, PDFs e mapas. Dados fictícios.">
+    <meta property="og:image" content="https://lucasrikelmi.dev/assets/img/og.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Lucas Rikelmi, desenvolvedor: Software que resolve operação.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NEXO (demo) | Lucas Rikelmi">
+    <meta name="twitter:description" content="Demo navegável do NEXO: gestão de operações de campo 100% no navegador, com dados cifrados, PDFs e mapas. Dados fictícios.">
+    <meta name="twitter:image" content="https://lucasrikelmi.dev/assets/img/og.png">
+    <link href="vendor/css/inter.css" rel="stylesheet" />
+    <link rel="stylesheet" href="vendor/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="vendor/css/shepherd.css" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+</script>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-compass logo-icon"></i>
+        <span class="logo-text">NEXO</span>
+        <button
+          class="sidebar-collapse-btn"
+          id="sidebarCollapseBtn"
+          title="Retrair menu"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <ul class="nav-links">
+        <li class="active">
+          <a href="index.html" data-tooltip="Início"
+            ><i class="fas fa-home"></i> <span>Início</span></a
+          >
+        </li>
+        <li>
+          <a href="dashboard.html" data-tooltip="Dashboard"
+            ><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a
+          >
+        </li>
+        <li>
+          <a href="planejamento.html" data-tooltip="Planejamento"
+            ><i class="fas fa-calendar-alt"></i> <span>Planejamento</span></a
+          >
+        </li>
+        <li>
+          <a href="controle.html" data-tooltip="Controle"
+            ><i class="fas fa-list-check"></i> <span>Controle</span></a
+          >
+        </li>
+        <li>
+          <a href="sincronizacao.html" data-tooltip="Sincronização"
+            ><i class="fas fa-sync-alt"></i> <span>Sincronização</span></a
+          >
+        </li>
+        <li>
+          <a href="#" id="nexo-tour-help" data-tooltip="Tutorial" aria-label="Abrir tutorial desta tela" title="Tutorial desta tela"><i class="fas fa-circle-question"></i> <span>Tutorial</span></a>
+        </li>
+        <li class="nexo-tour-help-item">
+          <a href="configuracoes.html" data-tooltip="Configurações"
+            ><i class="fas fa-cog"></i> <span>Configurações</span></a
+          >
+        </li>
+      </ul>
+      <div class="sidebar-version"><span id="versionBadge">Versão: 2.0</span></div>
+    </aside>
+    <script>
+      (function () {
+        var s = document.getElementById("sidebar");
+        if (s && localStorage.getItem("sidebarCollapsed") === "1") {
+          s.style.transition = "none";
+          s.classList.add("collapsed");
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              s.style.transition = "";
+            });
+          });
+        }
+      })();
+</script>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="page-title">
+          <h2>
+            Bem-vindo ao NEXO - Gestão de
+            Operações de Campo
+          </h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn interativo" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <div class="avatar">
+              <img
+                src="img/logo-marca.png"
+                class="marca-avatar-img"
+                alt="Logo Meridiano"
+              />
+            </div>
+            <div class="user-info">
+              <span class="agency-name">Unidade Triângulo</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+        <div
+          class="nexo-home-grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+          "
+        >
+          <a
+            href="dashboard.html"
+            class="sync-card"
+            style="
+              text-decoration: none;
+              color: inherit;
+              text-align: center;
+              padding: 40px;
+            "
+          >
+            <i
+              class="fas fa-chart-line"
+              style="
+                font-size: 3rem;
+                color: var(--color-primary);
+                margin-bottom: 20px;
+              "
+            ></i>
+            <h3>Dashboard</h3>
+            <p class="text-muted">Indicadores e produtividade em tempo real.</p>
+          </a>
+          <a
+            href="planejamento.html"
+            class="sync-card"
+            style="
+              text-decoration: none;
+              color: inherit;
+              text-align: center;
+              padding: 40px;
+            "
+          >
+            <i
+              class="fas fa-calendar-alt"
+              style="
+                font-size: 3rem;
+                color: var(--color-warning);
+                margin-bottom: 20px;
+              "
+            ></i>
+            <h3>Planejamento</h3>
+            <p class="text-muted">Metas diárias e projeção de fechamento.</p>
+          </a>
+          <a
+            href="controle.html"
+            class="sync-card"
+            style="
+              text-decoration: none;
+              color: inherit;
+              text-align: center;
+              padding: 40px;
+            "
+          >
+            <i
+              class="fas fa-list-check"
+              style="font-size: 3rem; color: #8b5cf6; margin-bottom: 20px"
+            ></i>
+            <h3>Controle</h3>
+            <p class="text-muted">Gestão e acompanhamento das visitas.</p>
+          </a>
+          <a
+            href="sincronizacao.html"
+            class="sync-card"
+            style="
+              text-decoration: none;
+              color: inherit;
+              text-align: center;
+              padding: 40px;
+            "
+          >
+            <i
+              class="fas fa-sync-alt"
+              style="
+                font-size: 3rem;
+                color: var(--color-success);
+                margin-bottom: 20px;
+              "
+            ></i>
+            <h3>Sincronização</h3>
+            <p class="text-muted">Atualize a base de dados via CSV.</p>
+          </a>
+        </div>
+      </div>
+    </main>
+    <script src="js/config_unidade.js"></script>
+    <script src="js/changelog.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="vendor/js/shepherd.min.js"></script>
+    <script src="js/tour.js"></script>
+      <script src="js/demo_mode.js"></script>
+</body>
+</html>

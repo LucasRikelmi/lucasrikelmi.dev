@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <script src="mock-api.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Gestão de Frota — Marcas, Modelos e Veículos</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="stylesheet" href="global.css">
+</head>
+
+<body>
+
+<div class="app">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">LV</div>
+            <div>
+                <h1>Locação Veículos</h1>
+                <div style="font-size:12px; color:var(--muted)">Gestão de Frota</div>
+            </div>
+        </div>
+
+        <nav>
+            <a class="nav-item" href="index.html">Dashboard</a>
+            <a class="nav-item" id="nav-marcas" href="frota.html">Marcas, Modelos & Categ.</a>
+            <a class="nav-item" id="nav-veiculos" href="frota.html?tab=veiculo">Veículos</a>
+            <a class="nav-item" href="locacao.html">Locações</a>
+            <a class="nav-item" href="contrato.html">Contratos</a>
+            <a class="nav-item" href="cliente.html">Clientes</a>
+            <a class="nav-item" href="usuario.html">Usuários</a>
+            <a class="nav-item" href="relatorios.html">Relatórios</a>
+        </nav>
+
+        <div style="margin-top:auto; padding-top:20px; border-top:1px solid var(--glass); display:flex; justify-content:space-between; align-items:center">
+            <span style="font-size:12px; color:var(--muted)" id="user-display">Usuário</span>
+
+            <button id="themeToggle" class="icon-btn" title="Alternar Tema">
+                <svg class="icon-sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="icon-moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input id="globalSearch" placeholder="Buscar no módulo atual...">
+            </div>
+            <button class="btn ghost" onclick="fazerLogout()" style="padding:6px 12px; font-size:12px;">Sair</button>
+        </div>
+
+        <div id="frota-container">
+            <section id="view-marca" class="view" style="display:none;">
+                <div class="panel">
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="openTab('tab-marcas')">Gerenciar Marcas</button>
+                        <button class="tab-btn" onclick="openTab('tab-modelos')">Gerenciar Modelos</button>
+                        <button class="tab-btn" onclick="openTab('tab-categorias')">Gerenciar Categorias</button>
+                    </div>
+
+                    <div id="tab-marcas" class="tab-content active">
+                        <h2 id="title-marca" style="margin-top:0; font-size:18px; margin-bottom:20px;">Nova Marca</h2>
+                        <form id="form-marca">
+                            <input type="hidden" id="idMarca">
+                            <div class="full">
+                                <label>Nome da Marca</label>
+                                <input id="nomeMarca" class="input" placeholder="Ex: Volkswagen, Fiat...">
+                            </div>
+                            <div class="full" style="display:flex; justify-content:flex-end; gap:12px; margin-top:10px;">
+                                <button type="button" class="btn btn-cancel" onclick="resetFormMarca()">Cancelar Edição</button>
+                                <button type="submit" class="btn" id="btn-submit-marca">Salvar Marca</button>
+                            </div>
+                        </form>
+                        <div style="margin-top:30px">
+                            <h3 style="color:var(--muted)">Marcas Cadastradas</h3>
+                            <table id="tabela-marcas"><thead><tr><th>ID</th><th>Nome</th><th>Ações</th></tr></thead><tbody></tbody></table>
+                        </div>
+                    </div>
+
+                    <div id="tab-modelos" class="tab-content">
+                        <h2 id="title-modelo" style="margin-top:0; font-size:18px; margin-bottom:20px;">Novo Modelo</h2>
+                        <form id="form-modelo">
+                            <input type="hidden" id="idModelo">
+                            <div><label>Nome do Modelo</label><input id="nomeModelo" class="input" placeholder="Ex: Gol G5"></div>
+                            <div><label>Ano</label><input id="anoModelo" type="number" class="input" value="2025"></div>
+
+                            <div><label>Qtd. Disponível</label><input id="qtModelo" type="number" class="input" value="1" min="0"></div>
+
+                            <div><label>Marca</label><select id="selectMarcaModelo" class="input"><option value="">Carregando...</option></select></div>
+                            <div class="full"><label>Categoria</label><select id="selectCategoriaModelo" class="input"><option value="">Carregando...</option></select></div>
+
+                            <div class="full" style="display:flex; justify-content:flex-end; gap:12px; margin-top:10px;">
+                                <button type="button" class="btn btn-cancel" onclick="resetFormModelo()">Cancelar Edição</button>
+                                <button type="submit" class="btn" id="btn-submit-modelo">Salvar Modelo</button>
+                            </div>
+                        </form>
+                        <div style="margin-top:30px">
+                            <h3 style="color:var(--muted)">Modelos Cadastrados</h3>
+                            <table id="tabela-modelos"><thead><tr><th>ID</th><th>Modelo</th><th>Marca</th><th>Qtd.</th><th>Ano</th><th>Ações</th></tr></thead><tbody></tbody></table>
+                        </div>
+                    </div>
+
+                    <div id="tab-categorias" class="tab-content">
+                        <h2 id="title-categoria" style="margin-top:0; font-size:18px; margin-bottom:20px;">Nova Categoria</h2>
+                        <form id="form-categoria">
+                            <input type="hidden" id="idCategoria">
+                            <div><label>Nome da Categoria</label><input id="nomeCategoria" class="input" placeholder="Ex: SUV, Sedan..."></div>
+                            <div><label>Valor Diária (Base)</label><input id="valorCategoria" type="number" class="input" placeholder="100.00"></div>
+                            <div class="full" style="display:flex; justify-content:flex-end; gap:12px; margin-top:10px;">
+                                <button type="button" class="btn btn-cancel" onclick="resetFormCategoria()">Cancelar Edição</button>
+                                <button type="submit" class="btn" id="btn-submit-categoria">Salvar Categoria</button>
+                            </div>
+                        </form>
+                        <div style="margin-top:30px">
+                            <h3 style="color:var(--muted)">Categorias Cadastradas</h3>
+                            <table id="tabela-categorias"><thead><tr><th>ID</th><th>Nome</th><th>Valor</th><th>Ações</th></tr></thead><tbody></tbody></table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-veiculo" class="view" style="display:none;">
+                <div class="panel">
+                    <h2 id="title-veiculo" style="margin-top:0; font-size:18px; margin-bottom:20px;">Novo Veículo</h2>
+                    <form id="form-veiculo">
+                        <input type="hidden" id="idVeiculo">
+
+                        <div>
+                            <label>Modelo</label>
+                            <select id="selectModeloVeiculo" class="input">
+                                <option value="">Selecione o Modelo...</option>
+                            </select>
+                        </div>
+                        <div><label>Placa</label><input id="placaVeiculo" class="input" placeholder="ABC-1234"></div>
+                        <div><label>Renavam</label><input id="renavamVeiculo" class="input"></div>
+                        <div><label>Chassi</label><input id="chassiVeiculo" class="input"></div>
+                        <div><label>Cor</label><input id="corVeiculo" class="input" placeholder="Ex: Prata"></div>
+                        <div><label>Quilometragem</label><input id="kmVeiculo" type="number" class="input" placeholder="0"></div>
+
+                        <div class="full" style="display:flex; justify-content:flex-end; gap:12px;">
+                            <button type="button" class="btn btn-cancel" onclick="resetFormVeiculo()">Cancelar Edição</button>
+                            <button type="submit" class="btn" id="btn-submit-veiculo">Salvar Veículo</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel" style="margin-top:20px">
+                    <h3 style="color:var(--muted)">Veículos Cadastrados</h3>
+                    <table id="tabela-veiculos">
+                        <thead><tr><th>ID</th><th>Placa</th><th>Modelo</th><th>Km</th><th>Status</th><th>Ações</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080';
+
+    // --- 1. SEGURANÇA E LOGOUT ---
+
+    // Verifica se existe usuário logado. Se não, manda pro login.
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (!usuarioLogado) {
+        window.location.href = 'login.html';
+    } else {
+        // Mostra o nome do usuário na sidebar
+        const nomeExibicao = usuarioLogado.nome ? usuarioLogado.nome.split(' ')[0] : 'Usuário';
+        document.getElementById('user-display').innerText = nomeExibicao;
+    }
+
+    function fazerLogout() {
+        if(confirm("Tem certeza que deseja sair do sistema?")) {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = 'login.html';
+        }
+    }
+
+    // Variáveis Globais (Dados do Banco)
+    let listaMarcas = [];
+    let listaModelos = [];
+    let listaCategorias = [];
+    let listaVeiculos = [];
+
+    // --- 2. INICIALIZAÇÃO E NAVEGAÇÃO ---
+    function setupNavigationAndInit() {
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('light');
+        });
+
+        // Lógica para ATIVAR O LINK CORRETO NA SIDEBAR
+        const currentParams = new URLSearchParams(window.location.search);
+        const tabParam = currentParams.get('tab'); // Pega o ?tab=veiculo
+
+        const isVeiculo = tabParam === 'veiculo';
+
+        if (isVeiculo) {
+            document.getElementById('nav-veiculos').classList.add('active');
+            document.getElementById('view-veiculo').style.display = 'block';
+            document.getElementById('view-marca').style.display = 'none';
+        } else {
+            document.getElementById('nav-marcas').classList.add('active');
+            document.getElementById('view-veiculo').style.display = 'none';
+            document.getElementById('view-marca').style.display = 'block';
+        }
+
+        initDataLoad();
+    }
+
+    async function initDataLoad() {
+        setupSearch();
+
+        await verificarECriarDadosBasicos();
+
+        // Carrega dados iniciais
+        carregarTabelaMarcas();
+        carregarTabelaVeiculos();
+
+        // Se a aba Marcas/Modelos estiver visível, carrega os dados
+        if(document.getElementById('view-marca').style.display !== 'none') {
+             carregarTabelaCategorias();
+        }
+
+        carregarSelectModelosParaVeiculo();
+    }
+
+    // --- 3. LÓGICA DE ABAS E DADOS BÁSICOS (Simplificado) ---
+    window.openTab = function(tabId) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        let btnIndex = 0;
+        if(tabId === 'tab-modelos') btnIndex = 1;
+        if(tabId === 'tab-categorias') btnIndex = 2;
+        document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+
+        if(tabId === 'tab-modelos') carregarDadosModelo();
+        if(tabId === 'tab-categorias') carregarTabelaCategorias();
+
+        document.getElementById('globalSearch').value = '';
+    }
+
+    async function verificarECriarDadosBasicos() {
+        try {
+            const check = await fetch(`${API_URL}/marcas`);
+            if(!check.ok) return;
+        } catch (e) { console.error("Erro API: Verifique se o backend Java está rodando.", e); }
+    }
+
+
+    // --- 4. MARCAS (CRUD) ---
+    async function carregarTabelaMarcas() {
+        try {
+            const resp = await fetch(`${API_URL}/marcas`);
+            listaMarcas = await resp.json();
+            renderTabelaMarcas(listaMarcas);
+        } catch (e) {}
+    }
+
+    function renderTabelaMarcas(dados) {
+        const tbody = document.querySelector('#tabela-marcas tbody');
+        tbody.innerHTML = '';
+        if(dados.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="no-results">Nenhuma marca encontrada.</td></tr>'; return; }
+
+        dados.forEach(m => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${m.id}</td>
+                    <td>${m.nome}</td>
+                    <td style="display:flex; gap:10px;">
+                        <button class="btn ghost" onclick="prepararEdicaoMarca(${m.id}, '${m.nome}')" style="color:var(--accent); border-color:var(--accent); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                        <button class="btn ghost" onclick="deletarMarca(${m.id})" style="color:var(--danger); border-color:var(--danger); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    window.prepararEdicaoMarca = function(id, nome) {
+        document.getElementById('idMarca').value = id;
+        document.getElementById('nomeMarca').value = nome;
+        document.getElementById('title-marca').innerText = `Alterar Marca (ID: ${id})`;
+        document.getElementById('btn-submit-marca').innerText = 'Atualizar Marca';
+        document.querySelector('#form-marca .btn-cancel').style.display = 'inline-flex';
+    }
+
+    window.resetFormMarca = function() {
+        document.getElementById('idMarca').value = '';
+        document.getElementById('nomeMarca').value = '';
+        document.getElementById('title-marca').innerText = 'Nova Marca';
+        document.getElementById('btn-submit-marca').innerText = 'Salvar Marca';
+        document.querySelector('#form-marca .btn-cancel').style.display = 'none';
+    }
+
+    const formMarca = document.getElementById('form-marca');
+    if(formMarca) {
+        formMarca.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('idMarca').value;
+            const nome = document.getElementById('nomeMarca').value;
+            const isUpdate = !!id;
+            const novaMarca = { id: id || null, nome: nome };
+
+            const resp = await fetch(`${API_URL}/marcas`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(novaMarca)
+            });
+
+            if(resp.ok) {
+                alert(isUpdate ? 'Marca atualizada!' : 'Marca salva!');
+                resetFormMarca();
+                carregarTabelaMarcas();
+            } else {
+                alert('Erro ao salvar marca.');
+                console.error("Erro do Servidor:", await resp.text());
+            }
+        });
+    }
+
+    window.deletarMarca = async function(id) {
+        if(confirm('Tem certeza?')) {
+            try { await fetch(`${API_URL}/marcas/${id}`, { method: 'DELETE' }); carregarTabelaMarcas(); }
+            catch (e) { alert('Erro ao excluir.'); }
+        }
+    }
+
+    // --- 5. CATEGORIAS (CRUD) ---
+    async function carregarTabelaCategorias() {
+        try {
+            const resp = await fetch(`${API_URL}/categorias`);
+            listaCategorias = await resp.json();
+            renderTabelaCategorias(listaCategorias);
+        } catch(e) {}
+    }
+
+    function renderTabelaCategorias(dados) {
+        const tbody = document.querySelector('#tabela-categorias tbody');
+        tbody.innerHTML = '';
+        if(dados.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="no-results">Nenhuma categoria encontrada.</td></tr>'; return; }
+        dados.forEach(c => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.nome}</td>
+                    <td>R$ ${c.valorLocacao}</td>
+                    <td style="display:flex; gap:10px;">
+                        <button class="btn ghost" onclick="prepararEdicaoCategoria(${c.id}, '${c.nome}', ${c.valorLocacao})" style="color:var(--accent); border-color:var(--accent); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                        <button class="btn ghost" onclick="deletarCategoria(${c.id})" style="color:var(--danger); border-color:var(--danger); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    window.prepararEdicaoCategoria = function(id, nome, valor) {
+        document.getElementById('idCategoria').value = id;
+        document.getElementById('nomeCategoria').value = nome;
+        document.getElementById('valorCategoria').value = valor;
+        document.getElementById('title-categoria').innerText = `Alterar Categoria (ID: ${id})`;
+        document.getElementById('btn-submit-categoria').innerText = 'Atualizar Categoria';
+        document.querySelector('#form-categoria .btn-cancel').style.display = 'inline-flex';
+    }
+
+    window.resetFormCategoria = function() {
+        document.getElementById('idCategoria').value = '';
+        document.getElementById('nomeCategoria').value = '';
+        document.getElementById('valorCategoria').value = '';
+        document.getElementById('title-categoria').innerText = 'Nova Categoria';
+        document.getElementById('btn-submit-categoria').innerText = 'Salvar Categoria';
+        document.querySelector('#form-categoria .btn-cancel').style.display = 'none';
+    }
+
+    const formCategoria = document.getElementById('form-categoria');
+    if(formCategoria) {
+        formCategoria.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('idCategoria').value;
+            const isUpdate = !!id;
+            const payload = {
+                id: id || null,
+                nome: document.getElementById('nomeCategoria').value,
+                valorLocacao: parseFloat(document.getElementById('valorCategoria').value)
+            };
+
+            const resp = await fetch(`${API_URL}/categorias`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+
+            if(resp.ok) {
+                alert(isUpdate ? 'Categoria atualizada!' : 'Categoria salva!');
+                resetFormCategoria();
+                carregarTabelaCategorias();
+                carregarDadosModelo(); // Recarrega Modelos pois o Select de Categoria mudou
+            } else {
+                alert('Erro ao salvar Categoria. Verifique o console.');
+                console.error("Erro do Servidor:", await resp.text());
+            }
+        });
+    }
+
+    window.deletarCategoria = async function(id) {
+        if(confirm('Tem certeza? Isso pode afetar modelos vinculados.')) {
+            try { await fetch(`${API_URL}/categorias/${id}`, { method: 'DELETE' }); carregarTabelaCategorias(); }
+            catch (e) { alert('Erro ao excluir.'); }
+        }
+    }
+
+
+    // --- 6. MODELOS (CRUD) ---
+    async function carregarDadosModelo() {
+        // Busca Modelos, Marcas e Categorias simultaneamente (otimiza a performance)
+        const [resMod, resMarcas, resCats] = await Promise.all([
+            fetch(`${API_URL}/modelos`),
+            fetch(`${API_URL}/marcas`),
+            fetch(`${API_URL}/categorias`)
+        ]);
+
+        listaModelos = await resMod.json();
+        const marcas = await resMarcas.json();
+        const cats = await resCats.json();
+
+        renderTabelaModelos(listaModelos);
+
+        // Preenche Selects (Garante que os dropdowns estejam populados)
+        const selMarca = document.getElementById('selectMarcaModelo');
+        const selCat = document.getElementById('selectCategoriaModelo');
+        const valorAtualMarca = selMarca.value;
+        const valorAtualCat = selCat.value;
+
+        selMarca.innerHTML = '<option value="">Selecione...</option>';
+        marcas.forEach(m => selMarca.innerHTML += `<option value="${m.id}">${m.nome}</option>`);
+        if(valorAtualMarca) selMarca.value = valorAtualMarca;
+
+        selCat.innerHTML = '<option value="">Selecione...</option>';
+        cats.forEach(c => selCat.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+        if(valorAtualCat) selCat.value = valorAtualCat;
+    }
+
+    function renderTabelaModelos(dados) {
+        const tbody = document.querySelector('#tabela-modelos tbody');
+        tbody.innerHTML = '';
+        if(dados.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="no-results">Nenhum modelo encontrado.</td></tr>'; return; }
+
+        dados.forEach(m => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${m.id}</td>
+                    <td>${m.nome}</td>
+                    <td>${m.marca?.nome || '-'}</td>
+                    <td>${m.qtModelo || 0}</td>
+                    <td>${m.ano || '-'}</td>
+                    <td style="display:flex; gap:10px;">
+                        <button class="btn ghost" onclick="prepararEdicaoModelo(${m.id})" style="color:var(--accent); border-color:var(--accent); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                        <button class="btn ghost" onclick="deletarModelo(${m.id})" style="color:var(--danger); border-color:var(--danger); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    window.prepararEdicaoModelo = function(id) {
+        const modelo = listaModelos.find(m => m.id === id);
+        if(!modelo) return;
+
+        document.getElementById('idModelo').value = modelo.id;
+        document.getElementById('nomeModelo').value = modelo.nome;
+        document.getElementById('qtModelo').value = modelo.qtModelo;
+        document.getElementById('anoModelo').value = modelo.ano ? modelo.ano.substring(0,4) : '2025';
+
+        if(modelo.marca) document.getElementById('selectMarcaModelo').value = modelo.marca.id;
+        if(modelo.categoria) document.getElementById('selectCategoriaModelo').value = modelo.categoria.id;
+
+        document.getElementById('title-modelo').innerText = `Alterar Modelo (ID: ${id})`;
+        document.getElementById('btn-submit-modelo').innerText = 'Atualizar Modelo';
+        document.querySelector('#form-modelo .btn-cancel').style.display = 'inline-flex';
+    }
+
+    window.resetFormModelo = function() {
+        document.getElementById('idModelo').value = '';
+        document.getElementById('nomeModelo').value = '';
+        document.getElementById('qtModelo').value = '1';       // Volta para 1
+        document.getElementById('anoModelo').value = '2025';     // Volta para 2025
+        document.getElementById('selectMarcaModelo').value = '';
+        document.getElementById('selectCategoriaModelo').value = '';
+
+        document.getElementById('title-modelo').innerText = 'Novo Modelo';
+        document.getElementById('btn-submit-modelo').innerText = 'Salvar Modelo';
+        document.querySelector('#form-modelo .btn-cancel').style.display = 'none';
+    }
+
+    const formModelo = document.getElementById('form-modelo');
+    if(formModelo) {
+        formModelo.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('idModelo').value;
+            const isUpdate = !!id;
+            const marcaId = document.getElementById('selectMarcaModelo').value;
+            const categoriaId = document.getElementById('selectCategoriaModelo').value;
+
+            if (!marcaId || !categoriaId) {
+                alert('Erro: Selecione Marca e Categoria.');
+                return;
+            }
+
+            const payload = {
+                id: id || null,
+                nome: document.getElementById('nomeModelo').value,
+                ano: parseInt(document.getElementById('anoModelo').value),
+                qtModelo: document.getElementById('qtModelo').value,
+                marca: { id: marcaId },
+                categoria: { id: categoriaId }
+            };
+
+            const resp = await fetch(`${API_URL}/modelos`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+
+            if(resp.ok) {
+                alert(isUpdate ? 'Modelo atualizado!' : 'Modelo criado!');
+                resetFormModelo();
+                carregarDadosModelo();
+                carregarSelectModelosParaVeiculo(); // Atualiza select do Veículo
+            }
+            else {
+                alert('Erro ao salvar modelo. Verifique o console.');
+                console.error("Erro do Servidor:", await resp.text());
+            }
+        });
+    }
+
+    window.deletarModelo = async function(id) {
+        if(confirm('Tem certeza? Isso pode afetar veículos vinculados.')) {
+            try { await fetch(`${API_URL}/modelos/${id}`, { method: 'DELETE' }); carregarDadosModelo(); }
+            catch (e) { alert('Erro ao excluir.'); }
+        }
+    }
+
+
+    // --- 7. VEÍCULOS (CRUD) ---
+    async function carregarSelectModelosParaVeiculo() {
+        const resp = await fetch(`${API_URL}/modelos`);
+        const modelos = await resp.json();
+        const select = document.getElementById('selectModeloVeiculo');
+        const valorAtual = select.value;
+        select.innerHTML = '<option value="">Selecione o Modelo...</option>';
+        modelos.forEach(m => select.innerHTML += `<option value="${m.id}">${m.nome} (${m.marca?.nome})</option>`);
+        if(valorAtual) select.value = valorAtual;
+    }
+
+    async function carregarTabelaVeiculos() {
+        try {
+            const resposta = await fetch(`${API_URL}/veiculos`);
+            listaVeiculos = await resposta.json();
+            renderTabelaVeiculos(listaVeiculos);
+        } catch (e) {}
+    }
+
+    function renderTabelaVeiculos(dados) {
+        const tbody = document.querySelector('#tabela-veiculos tbody');
+        tbody.innerHTML = '';
+        if(dados.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="no-results">Nenhum veículo cadastrado.</td></tr>'; return; }
+
+        dados.forEach(v => {
+            const nomeModelo = v.modelo ? v.modelo.nome : 'N/A';
+            const statusClass = v.status === 'DISPONIVEL' ? 'available' : 'ocupado';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${v.id}</td>
+                    <td>${v.placa}</td>
+                    <td>${nomeModelo}</td>
+                    <td>${v.km || 0}</td>
+                    <td><span class="status ${statusClass}">${v.status}</span></td>
+                    <td style="display:flex; gap:10px;">
+                        <button class="btn ghost" onclick="prepararEdicaoVeiculo(${v.id})" style="color:var(--accent); border-color:var(--accent); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                        <button class="btn ghost" onclick="deletarVeiculo(${v.id})" style="color:var(--danger); border-color:var(--danger); padding:4px 8px; font-size:12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    window.prepararEdicaoVeiculo = async function(id) {
+        const veiculo = listaVeiculos.find(v => v.id == id);
+        if(!veiculo) return alert('Veículo não encontrado.');
+
+        document.getElementById('idVeiculo').value = veiculo.id;
+        document.getElementById('placaVeiculo').value = veiculo.placa;
+        document.getElementById('renavamVeiculo').value = veiculo.renavam;
+        document.getElementById('chassiVeiculo').value = veiculo.chassi;
+        document.getElementById('corVeiculo').value = veiculo.cor;
+        document.getElementById('kmVeiculo').value = veiculo.km;
+
+        await carregarSelectModelosParaVeiculo();
+        if(veiculo.modelo) {
+            document.getElementById('selectModeloVeiculo').value = veiculo.modelo.id;
+        }
+
+        document.getElementById('title-veiculo').innerText = `Alterar Veículo (ID: ${veiculo.id})`;
+        document.getElementById('btn-submit-veiculo').innerText = 'Atualizar Veículo';
+        document.querySelector('#form-veiculo .btn-cancel').style.display = 'inline-flex';
+    }
+
+    window.resetFormVeiculo = function() {
+        document.getElementById('idVeiculo').value = '';
+        document.getElementById('placaVeiculo').value = '';
+        document.getElementById('renavamVeiculo').value = '';
+        document.getElementById('chassiVeiculo').value = '';
+        document.getElementById('corVeiculo').value = '';
+        document.getElementById('kmVeiculo').value = '';
+        document.getElementById('selectModeloVeiculo').value = '';
+
+        document.getElementById('title-veiculo').innerText = 'Novo Veículo';
+        document.getElementById('btn-submit-veiculo').innerText = 'Salvar Veículo';
+        document.querySelector('#form-veiculo .btn-cancel').style.display = 'none';
+    }
+
+
+    const formVeiculo = document.getElementById('form-veiculo');
+    if(formVeiculo) {
+        formVeiculo.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('idVeiculo').value;
+            const isUpdate = !!id;
+            const selectModelo = document.getElementById('selectModeloVeiculo');
+
+            if(!selectModelo.value) { alert("Selecione um modelo!"); return; }
+
+            const novoVeiculo = {
+                id: id || null,
+                modelo: { id: selectModelo.value },
+                placa: document.getElementById('placaVeiculo').value,
+                renavam: document.getElementById('renavamVeiculo').value,
+                chassi: document.getElementById('chassiVeiculo').value,
+                cor: document.getElementById('corVeiculo').value,
+                km: document.getElementById('kmVeiculo').value
+                // status não é enviado: quem controla é o fluxo de contratos
+            };
+
+            const resposta = await fetch(`${API_URL}/veiculos`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(novoVeiculo)
+            });
+
+            if(resposta.ok) {
+                alert(isUpdate ? 'Veículo atualizado!' : 'Veículo salvo!');
+                resetFormVeiculo();
+                carregarTabelaVeiculos(); // Recarrega a tabela de veículos
+            } else {
+                const corpo = await resposta.json().catch(() => ({}));
+                alert(corpo.erro || 'Erro ao salvar/atualizar!');
+            }
+        });
+    }
+
+    window.deletarVeiculo = async function(id) {
+        if(confirm('Tem certeza?')) {
+            const res = await fetch(`${API_URL}/veiculos/${id}`, { method: 'DELETE' });
+            if (!res.ok) { const corpo = await res.json().catch(() => ({})); alert(corpo.erro || 'Erro ao excluir.'); }
+            carregarTabelaVeiculos();
+        }
+    }
+
+    // --- 8. BUSCA GLOBAL ---
+    function setupSearch() {
+        const input = document.getElementById('globalSearch');
+        input.addEventListener('keyup', () => {
+            const termo = input.value.toLowerCase();
+            const abaMarcasVisivel = document.getElementById('view-marca').style.display !== 'none';
+            const abaVeiculosVisivel = document.getElementById('view-veiculo').style.display !== 'none';
+
+            if(abaMarcasVisivel) {
+                const abaAtiva = document.querySelector('#view-marca .tab-content.active')?.id;
+
+                if(abaAtiva === 'tab-marcas') {
+                    const filtrado = listaMarcas.filter(m => m.nome.toLowerCase().includes(termo));
+                    renderTabelaMarcas(filtrado);
+                } else if(abaAtiva === 'tab-modelos') {
+                    const filtrado = listaModelos.filter(m => m.nome.toLowerCase().includes(termo) || (m.marca && m.marca.nome.toLowerCase().includes(termo)));
+                    renderTabelaModelos(filtrado);
+                } else if(abaAtiva === 'tab-categorias') {
+                    const filtrado = listaCategorias.filter(c => c.nome.toLowerCase().includes(termo));
+                    renderTabelaCategorias(filtrado);
+                }
+            } else if (abaVeiculosVisivel) {
+                const filtrado = listaVeiculos.filter(v =>
+                    v.placa.toLowerCase().includes(termo) ||
+                    v.renavam.toLowerCase().includes(termo) ||
+                    v.cor.toLowerCase().includes(termo) ||
+                    v.modelo?.nome.toLowerCase().includes(termo)
+                );
+                renderTabelaVeiculos(filtrado);
+            }
+        });
+    }
+
+
+    // --- INÍCIO DA APLICAÇÃO ---
+    setupNavigationAndInit();
+</script>
+</body>
+</html>

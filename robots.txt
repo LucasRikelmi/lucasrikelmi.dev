@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# Código-fonte da API: útil no GitHub, ruído nos resultados de busca
+Disallow: /codigo/
+
+Sitemap: https://lucasrikelmi.dev/sitemap.xml
