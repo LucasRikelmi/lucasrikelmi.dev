@@ -23,8 +23,8 @@
 .menu-open .nav-toggle span { background: transparent; }
 .menu-open .nav-toggle span::before { transform: translateY(5px) rotate(45deg); }
 .menu-open .nav-toggle span::after { transform: translateY(-5px) rotate(-45deg); }
-/* 54em: abaixo disso menu + ícones + seletor de tema não cabem (medido: 769–860px estourava) */
-@media (max-width: 54em) {
+/* 60em: abaixo disso os 6 itens do menu + ícones + seletor de tema não cabem (medido: estourava até ~932px) */
+@media (max-width: 60em) {
   .nav-toggle { display: grid; }
   .menu { position: fixed; inset: 4rem 0 auto 0; flex-direction: column; align-items: stretch; gap: 0;
     background: var(--bg); border-bottom: 1px solid var(--line); padding: .5rem var(--gutter) 1.25rem;

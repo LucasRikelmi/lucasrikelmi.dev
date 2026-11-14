@@ -68,6 +68,7 @@
       <li><a href="#projetos">Projetos</a></li>
       <li><a href="#geocodificacao">Geocodificação</a></li>
       <li><a href="#laboratorio">Laboratório</a></li>
+      <li><a href="#stack">Stack</a></li>
       <li><a href="#sobre">Sobre</a></li>
       <li><a href="#contato">Contato</a></li>
     </ul>
@@ -334,10 +335,10 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
   <div class="wrap">
     <div class="geo-intro reveal">
       <div>
-        <span class="mono">Playground offline · o motor por dentro</span>
-        <h2 style="margin-top:1rem">Do endereço digitado <em>ao ponto no mapa</em></h2>
+        <span class="mono">Playground offline · roda no seu navegador</span>
+        <h2 style="margin-top:1rem">O motor, <em>passo a passo</em></h2>
       </div>
-      <p>Endereço de cadastro no Brasil chega como <strong>“RUA OITO QD 21 LT 4”</strong>, <strong>“Av Brazil 340”</strong> ou <strong>“esquina com a Goiás”</strong>. O motor normaliza, extrai quadra, lote, número e km, acha a via por similaridade e devolve a coordenada <strong>com o nível em que encontrou o endereço</strong>, sem chamar nenhuma API. Abaixo roda o <code>geo_core.js</code>, a versão original do motor que virou o <a href="#p-candeia">Candeia</a>, sobre uma cidade fictícia: nada sai do seu navegador.</p>
+      <p>A demo do <a href="#p-candeia">Candeia</a> mostra o resultado; aqui dá para ver <strong>cada etapa da decisão</strong>: normalização, entidades extraídas (quadra, lote, número, km), ranking de vias por similaridade e o nível em que o endereço foi encontrado. Roda o <code>geo_core.js</code>, a versão original do motor, sobre uma cidade fictícia: nada sai do seu navegador.</p>
     </div>
 
     <div class="geo reveal" id="geo-play">
@@ -403,7 +404,10 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
 
 <section id="stack" class="alt">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>Ferramentas <em>do dia a dia</em></h2></div>
+    <div class="sec-head reveal">
+      <h2>Ferramentas <em>do dia a dia</em></h2>
+      <span class="mono">stack · o que uso nos projetos acima</span>
+    </div>
     <div class="stack reveal">
       <div><h3>Front-end</h3><ul><li>JavaScript (ES2022)</li><li>HTML semântico · CSS</li><li>Chart.js · jsPDF · JSZip</li><li>Web Crypto API</li></ul></div>
       <div><h3>Back-end</h3><ul><li>Java 17</li><li>Spring Boot · Spring Web</li><li>Spring Data JPA · Hibernate</li><li>Python (scripts e ETL)</li></ul></div>
@@ -430,7 +434,7 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
         <li><div><b>Privacidade por padrão</b><span>Dado sensível não sai da máquina; quando precisa ficar salvo, fica cifrado.</span></div></li>
         <li><div><b>Funciona sem internet</b><span>Bibliotecas e fontes servidas localmente, sem build e sem depender de CDN.</span></div></li>
         <li><div><b>Camadas bem separadas</b><span>Leitura de arquivo, regra de negócio e interface não se misturam.</span></div></li>
-        <li><div><b>Medido, não estimado</b><span>Número que aparece aqui sai de teste ou de uso real, e o código está aberto para conferir.</span></div></li>
+        <li><div><b>Medido sempre que dá</b><span>Número que aparece aqui sai de teste ou de uso real; o que é estimativa vem marcado como estimativa.</span></div></li>
       </ol>
     </div>
   </div>
