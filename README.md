@@ -30,7 +30,7 @@ Abra `http://localhost:8000`. As demos e o simulador usam módulos ES e precisam
 
 ```bash
 # Simulador (Node 20+)
-node --test lab/cpu/tests/
+node --test "lab/cpu/tests/*.test.js"
 
 # API Java
 cd codigo/locadora-api
