@@ -3,12 +3,14 @@
 Portfólio de **Lucas Rikelmi**, publicado em [lucasrikelmi.dev](https://lucasrikelmi.dev).
 Site estático (HTML, CSS e JS puros), sem build e sem dependências de CDN: fontes e bibliotecas são servidas pelo próprio site.
 
+O projeto principal apresentado aqui, o **Candeia** (geocodificação de endereços brasileiros a partir do CNEFE 2022), vive no próprio repositório: [github.com/LucasRikelmi/candeia](https://github.com/LucasRikelmi/candeia), pacote [`candeia` no npm](https://www.npmjs.com/package/candeia), [demo](https://candeia.lucasrikelmi.dev/exemplo/) e [índice de dados](https://dados.lucasrikelmi.dev). O `demo/nexo/js/geo_core.js` deste repositório é a versão original do motor, mantida só para o playground da página inicial.
+
 ## Conteúdo
 
 | Caminho | O que é |
 |---|---|
 | `index.html` | Página do portfólio |
-| `assets/css/base.css` | Tokens de cor (claro/escuro), tipografia em `rem`, seletor de tema e efeitos compartilhados |
+| `assets/css/base.css` | Tokens de cor (claro/escuro) e de movimento, tipografia em `rem`, seletor de tema e efeitos compartilhados |
 | `assets/js/site.js` | Tema (sistema / claro / escuro), menu mobile, holofote no hover e revelação ao rolar |
 | `assets/js/geo-playground.js` | Playground que roda o `demo/nexo/js/geo_core.js` sobre a cidade fictícia de `assets/js/geo-town.js` |
 | `demo/nexo/` | **NEXO**: demo navegável de um sistema de gestão de operações de campo (100% no navegador, dados cifrados, PDFs, mapas KML). Dados fictícios. |
@@ -42,3 +44,18 @@ DB_PASSWORD=sua-senha ./mvnw spring-boot:run   # DB_URL e DB_USER também podem 
 ```
 
 Os valores monetários passaram de `float` para `BigDecimal` (`numeric(12,2)`). Num banco criado antes dessa mudança, o `ddl-auto=update` do Hibernate não altera o tipo das colunas existentes; recrie o banco de desenvolvimento ou rode um `ALTER TABLE ... TYPE numeric(12,2)` nas colunas de valor.
+
+## Movimento
+
+Tokens em `assets/css/base.css`. Anima-se só `transform` e `opacity`.
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--dur-fast` | 160 ms | cor, borda, hover |
+| `--dur-base` | 280 ms | translate de botão, menu, crossfade de galeria |
+| `--dur-slow` | 600 ms | reveal ao rolar, pino do mapa, barras |
+| `--ease-out` | `cubic-bezier(.2,.7,.1,1)` | padrão: entrada e resposta a input |
+| `--ease-in-out` | `cubic-bezier(.65,0,.35,1)` | troca de estado no lugar (aba, cor, tema) |
+| `--ease-emph` | `cubic-bezier(.16,1,.3,1)` | só o que precisa chamar atenção (hero, barras do laboratório) |
+
+O reveal entra em sequência entre irmãos (60 ms por passo, no máximo 5). Com `prefers-reduced-motion: reduce`, o deslocamento some e fica só um fade curto.

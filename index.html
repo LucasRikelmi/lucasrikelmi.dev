@@ -13,7 +13,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://lucasrikelmi.dev/">
 <meta property="og:title" content="Lucas Rikelmi | Desenvolvedor">
-<meta property="og:description" content="Software que resolve operação: sistemas no navegador com criptografia e geocodificação offline, e APIs REST em Java/Spring.">
+<meta property="og:description" content="Software que resolve operação: Candeia, geocodificador open source de endereços brasileiros; sistemas no navegador com criptografia; APIs REST em Java/Spring.">
 <meta property="og:image" content="https://lucasrikelmi.dev/assets/img/og.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="Lucas Rikelmi, desenvolvedor: Software que resolve operação.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Lucas Rikelmi | Desenvolvedor">
-<meta name="twitter:description" content="Software que resolve operação: sistemas no navegador com criptografia e geocodificação offline, e APIs REST em Java/Spring.">
+<meta name="twitter:description" content="Software que resolve operação: Candeia, geocodificador open source de endereços brasileiros; sistemas no navegador com criptografia; APIs REST em Java/Spring.">
 <meta name="twitter:image" content="https://lucasrikelmi.dev/assets/img/og.png">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f8fa" data-default="#f7f8fa">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e12" data-default="#0b0e12">
@@ -93,7 +93,7 @@
       <span class="line"><span>resolve <em>operação.</em></span></span>
     </h1>
     <div class="hero-grid">
-      <p>Sou <strong>Lucas Rikelmi</strong>, desenvolvedor que transforma rotina de campo em sistema: de <strong>apps que rodam inteiros no navegador, com criptografia e geocodificação offline</strong>, a <strong>APIs REST em Java/Spring</strong>.</p>
+      <p>Sou <strong>Lucas Rikelmi</strong>, desenvolvedor que transforma rotina de campo em sistema: de <strong>apps que rodam inteiros no navegador, com criptografia e geocodificação offline</strong>, a <strong>APIs REST em Java/Spring</strong>. Mantenho o <a href="#p-candeia">Candeia</a>, biblioteca open source de geocodificação publicada no npm.</p>
       <div class="cta">
         <a class="btn primary" href="#projetos">Ver projetos <span class="arr" aria-hidden="true">→</span></a>
         <a class="btn" href="#geocodificacao">Testar o geocodificador</a>
@@ -104,8 +104,8 @@
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span>AES-256-GCM + Argon2id</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
-    <span>AES-256-GCM + Argon2id</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
+    <span>AES-256-GCM + Argon2id</span><span>Candeia · npm</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
+    <span>AES-256-GCM + Argon2id</span><span>Candeia · npm</span><span>Geocodificação offline</span><span>Spring Boot 3 · JPA</span><span>Simulador RV32 ciclo a ciclo</span><span>PDF vetorial em lote</span><span>KML para Google Earth</span><span>PostgreSQL</span><span>Zero servidor · offline-first</span>
   </div>
 </div>
 
@@ -114,13 +114,68 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <h2>Projetos <em>selecionados</em></h2>
-      <span class="mono">02 estudos de caso · demos navegáveis</span>
+      <span class="mono">03 estudos de caso · código aberto e demos</span>
     </div>
+
+    <!-- ───────────── CANDEIA ───────────── -->
+    <article class="project reveal" aria-labelledby="p-candeia">
+      <div class="p-top">
+        <div class="p-num" aria-hidden="true">01</div>
+        <div>
+          <h3 id="p-candeia">Candeia: do endereço brasileiro à coordenada, sem servidor</h3>
+          <p class="lede">Biblioteca open source em JavaScript (navegador e Node, sem dependências) que geocodifica endereços brasileiros a partir do <strong>CNEFE 2022</strong>, o cadastro público de endereços do Censo. Baixa só o município consultado, entende <strong>quadra e lote</strong> e devolve cada resultado com o método usado e um <strong>raio de erro em metros</strong>.</p>
+          <ul class="tags">
+            <li class="tag">JavaScript · Node 22</li><li class="tag">Zero dependências</li><li class="tag">CNEFE 2022</li><li class="tag">Parquet → JSON gzip</li><li class="tag">CI com benchmark</li><li class="tag">MIT · CC BY 4.0</li>
+          </ul>
+        </div>
+        <span class="mono">Open source · npm 1.1.1</span>
+      </div>
+
+      <div class="metrics">
+        <div class="metric metric-destaque"><b>74,5%</b><span>das respostas a até 100 m do ponto certo no benchmark sintético</span></div>
+        <div class="metric"><b>~38%</b><span>sem número de porta: limitado pela extensão da rua, e o raio informa isso</span></div>
+        <div class="metric"><b>~1,3 MB</b><span>pior download por consulta (São Paulo capital); a seguinte na mesma via não baixa nada</span></div>
+        <div class="metric"><b>27</b><span>UFs no índice publicado, gerado só pelo pipeline do repositório</span></div>
+      </div>
+      <p class="note caveat"><b>Como ler esses números.</b> O benchmark (132 municípios, 19.800 endereços) sorteia endereços do próprio CNEFE e os suja com abreviações, erros de digitação e campos faltando. Como o gabarito vem da mesma base, ele é otimista por construção e não diz nada sobre endereço que não está no CNEFE de 2022. A comparação com o geocodebr, do IPEA, nas mesmas consultas, e os limites dela estão no README.</p>
+
+      <div class="arch">
+        <div class="layers">
+          <span class="mono" style="display:block;margin-bottom:.75rem">Decisões técnicas</span>
+          <div class="layer"><span class="mono">Dados</span><span>CSV de 18,2 GB → Parquet de 3,2 GB → um índice JSON comprimido por município (5.425 dos 5.570 abaixo de 1 MB)</span></div>
+          <div class="layer"><span class="mono">Carga</span><span>Município grande baixa o índice de vias e só a fatia da via pedida; cada arquivo é conferido por sha256 contra o manifesto</span></div>
+          <div class="layer"><span class="mono">Busca</span><span>Bloqueio por token do nome da via, depois Jaro-Winkler + Jaccard; bairro e CEP desempatam ruas homônimas</span></div>
+          <div class="layer"><span class="mono">Resposta</span><span><code>status</code>, <code>metodo</code>, <code>raio</code> e <code>confianca</code> calibrada fora da amostra, em vez de um score que finge ser probabilidade</span></div>
+          <div class="layer"><span class="mono">Regressão</span><span>O CI roda o benchmark em todo pull request e falha se qualquer grupo cair mais de 1 ponto</span></div>
+        </div>
+<pre class="code" tabindex="0" aria-label="Trecho de código: uso do Candeia"><span class="c">// npm install candeia  (Node 22+, sem dependências)</span>
+<span class="k">import</span> { criarGeocodificador } <span class="k">from</span> <span class="s">"candeia"</span>;
+
+<span class="k">const</span> geo = <span class="a">criarGeocodificador</span>({
+  base: <span class="s">"https://dados.lucasrikelmi.dev/cnefe2022/v1/"</span>,
+});
+<span class="k">const</span> r = <span class="k">await</span> geo.<span class="a">geocodificar</span>(<span class="s">"Rua 8, Qd 21 Lt 4"</span>, {
+  municipio: <span class="s">"5208707"</span>, <span class="c">// código IBGE</span>
+  bairro: <span class="s">"Setor Central"</span>,
+});
+<span class="c">// r.status  → "verde" … "vermelho"</span>
+<span class="c">// r.metodo  → "quadra_lote", "numero", "eixo", …</span>
+<span class="c">// r.raio    → até onde o ponto pode estar, em metros</span></pre>
+      </div>
+
+      <div class="p-actions">
+        <a class="btn primary" href="https://candeia.lucasrikelmi.dev/exemplo/" target="_blank" rel="noopener">Abrir a demo do Candeia <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn" href="https://github.com/LucasRikelmi/candeia" target="_blank" rel="noopener">Código no GitHub</a>
+        <a class="btn" href="https://www.npmjs.com/package/candeia" target="_blank" rel="noopener">Pacote no npm</a>
+        <a class="btn" href="https://dados.lucasrikelmi.dev" target="_blank" rel="noopener">Índice de dados</a>
+      </div>
+      <p class="note">Fonte: CNEFE, Censo 2022, IBGE (dados públicos). O código roda no navegador ou no Node de quem usa; o servidor dos arquivos vê só qual município foi baixado, nunca o endereço consultado.</p>
+    </article>
 
     <!-- ───────────── NEXO ───────────── -->
     <article class="project reveal" aria-labelledby="p-nexo">
       <div class="p-top">
-        <div class="p-num" aria-hidden="true">01</div>
+        <div class="p-num" aria-hidden="true">02</div>
         <div>
           <h3 id="p-nexo">NEXO: gestão de operações de campo</h3>
           <p class="lede">Plataforma para equipes que acompanham centenas de empresas em campo: importa bases, gera cartas e recibos em PDF, localiza endereços no mapa, cruza contatos e projeta metas, tudo <strong>dentro do navegador</strong>, sem servidor e sem enviar nenhum dado para fora.</p>
@@ -157,7 +212,7 @@
       <ul class="features">
         <li class="feat spot"><span class="mono">Segurança</span><h3>Cofre local cifrado</h3><p>A base fica no navegador comprimida e cifrada com <strong>AES-256-GCM</strong>; a chave nasce de uma senha via <strong>Argon2id</strong>. Bloqueio por inatividade, limite de tentativas e expiração automática.</p></li>
         <li class="feat spot"><span class="mono">Documentos</span><h3>Gerador próprio de documentos</h3><p>Convite, lembrete, comunicado formal, recibo em duas vias e termo LGPD, montados por blocos em jsPDF com texto vetorial. Um lote de 10 empresas sai em ~220 KB.</p></li>
-        <li class="feat spot"><span class="mono">Geo</span><h3>Geocodificação 100% offline</h3><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado e devolve coordenada com nível de confiança. <a href="#geocodificacao">Teste ao vivo abaixo</a>.</p></li>
+        <li class="feat spot"><span class="mono">Geo</span><h3>Geocodificação offline</h3><p>Motor próprio que entende endereço brasileiro do jeito que ele é digitado. Depois virou uma biblioteca independente, o <a href="#p-candeia">Candeia</a>; a versão original roda <a href="#geocodificacao">ao vivo abaixo</a>.</p></li>
         <li class="feat spot"><span class="mono">Contatos</span><h3>Cruzamento de contatos</h3><p>Normaliza telefones, e-mails e CNPJs e agrupa empresas ligadas ao mesmo representante, o que vira uma abordagem centralizada.</p></li>
         <li class="feat spot"><span class="mono">ETL</span><h3>CSV de milhões de linhas no browser</h3><p>Leitura em streaming com detecção de encoding e separador, filtro por município e geração de índice, sem Python e sem travar a aba.</p></li>
         <li class="feat spot"><span class="mono">Gestão</span><h3>Dashboard e projeção de metas</h3><p>Indicadores, funil de atendimento, produtividade por técnico e curva realizado × previsto com calendário de dias úteis e feriados.</p></li>
@@ -189,6 +244,7 @@
       <div class="p-actions">
         <a class="btn primary" href="demo/nexo/index.html">Abrir demo do NEXO <span class="arr" aria-hidden="true">→</span></a>
         <a class="btn" href="demo/nexo/controle.html">Ir direto para o Controle</a>
+        <a class="btn" href="https://github.com/LucasRikelmi/lucasrikelmi.dev/tree/main/demo/nexo" target="_blank" rel="noopener">Código da demo</a>
       </div>
       <p class="note">Demonstração com cenário fictício de gestão de fornecedores: empresas, pessoas, endereços e documentos são inventados. A criptografia continua ativa, só o diálogo de senha é pulado.</p>
     </article>
@@ -196,7 +252,7 @@
     <!-- ───────────── LOCADORA ───────────── -->
     <article class="project reveal" aria-labelledby="p-loc">
       <div class="p-top">
-        <div class="p-num" aria-hidden="true">02</div>
+        <div class="p-num" aria-hidden="true">03</div>
         <div>
           <h3 id="p-loc">Locadora: gestão de frota de ponta a ponta</h3>
           <p class="lede">Sistema completo para locadoras de veículos: cadastro da frota, clientes, contratos, devolução com registro de avarias e pagamento, num fluxo só. Backend em <strong>Java 17 + Spring Boot 3</strong> com <strong>PostgreSQL</strong>, pronto para conectar a um app ou site, e painel web próprio.</p>
@@ -273,10 +329,10 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
   <div class="wrap">
     <div class="geo-intro reveal">
       <div>
-        <span class="mono">Em destaque · motor do NEXO</span>
+        <span class="mono">Playground offline · o motor por dentro</span>
         <h2 style="margin-top:1rem">Do endereço digitado <em>ao ponto no mapa</em></h2>
       </div>
-      <p>Endereço de cadastro no Brasil chega como <strong>“RUA OITO QD 21 LT 4”</strong>, <strong>“Av Brazil 340”</strong> ou <strong>“esquina com a Goiás”</strong>. O motor normaliza, extrai quadra, lote, número e km, acha a via por similaridade e devolve a coordenada <strong>com um nível de confiança honesto</strong>, sem chamar nenhuma API. Abaixo roda o mesmo <code>geo_core.js</code> do sistema, sobre uma cidade fictícia.</p>
+      <p>Endereço de cadastro no Brasil chega como <strong>“RUA OITO QD 21 LT 4”</strong>, <strong>“Av Brazil 340”</strong> ou <strong>“esquina com a Goiás”</strong>. O motor normaliza, extrai quadra, lote, número e km, acha a via por similaridade e devolve a coordenada <strong>com o nível em que encontrou o endereço</strong>, sem chamar nenhuma API. Abaixo roda o <code>geo_core.js</code>, a versão original do motor que virou o <a href="#p-candeia">Candeia</a>, sobre uma cidade fictícia: nada sai do seu navegador.</p>
     </div>
 
     <div class="geo reveal" id="geo-play">
@@ -324,6 +380,7 @@ veiculo.setStatus(StatusVeiculo.<span class="a">ALUGADO</span>);</pre>
         <div class="p-actions">
           <a class="btn primary" href="lab/cpu/">Abrir o simulador <span class="arr" aria-hidden="true">→</span></a>
           <a class="btn" href="lab/cpu/#sobre">Como o modelo funciona</a>
+          <a class="btn" href="https://github.com/LucasRikelmi/lucasrikelmi.dev/tree/main/lab/cpu" target="_blank" rel="noopener">Código e testes</a>
         </div>
       </div>
       <div class="lab-live" id="lab-live" aria-live="polite">

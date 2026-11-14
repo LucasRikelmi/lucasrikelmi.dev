@@ -60,6 +60,7 @@ h1 .line { display: block; overflow: hidden; padding-bottom: .16em; margin-botto
 .hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; margin-top: 3.5rem; align-items: end; }
 .hero-grid p { font-size: clamp(1.125rem, 2vw, 1.375rem); max-width: 36ch; color: var(--muted); }
 .hero-grid p strong { color: var(--ink); font-weight: 500; }
+.hero-grid p a, .geo-intro p a { color: var(--accent); text-underline-offset: .2em; }
 .cta { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: flex-end; }
 @media (max-width: 52em) { .hero-grid { grid-template-columns: 1fr; gap: 2rem; } .cta { justify-content: flex-start; } }
 
@@ -145,6 +146,9 @@ pre.code .k { color: #c9a8ff; } pre.code .s { color: #e6c07b; } pre.code .c { co
 .p-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 2rem; }
 .note { margin-top: 1.125rem; font-size: .875rem; color: var(--muted); max-width: 72ch; }
 .note code { font-size: .8rem; color: var(--ink); }
+/* limitação declarada junto da métrica, não escondida no rodapé */
+.note.caveat { margin: -1rem 0 2rem; padding: .875rem 1rem; border-left: 2px solid var(--warn); background: var(--card); border-radius: 0 .5rem .5rem 0; max-width: none; }
+.note.caveat b { color: var(--ink); font-weight: 500; }
 
 /* ── geocodificação ── */
 .geo-intro { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: end; margin-bottom: 2.5rem; }
