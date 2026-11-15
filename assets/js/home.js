@@ -7,11 +7,18 @@
     const list = g.nextElementSibling;
     const tabs = [...list.querySelectorAll('[role="tab"]')];
     const url = g.querySelector(".url");
+    // Painel único: as abas controlam a área de telas, não cada imagem.
+    const shots = g.querySelector(".shots");
+    shots.id = shots.id || imgs[0].id + "-painel";
+    shots.setAttribute("role", "tabpanel");
+    tabs.forEach((t, j) => { t.id = t.id || imgs[j].id + "-aba"; t.setAttribute("aria-controls", shots.id); });
+    shots.setAttribute("aria-labelledby", tabs[0].id);
     const select = (i, focus) => {
       if (imgs[i].dataset.src) { imgs[i].src = imgs[i].dataset.src; delete imgs[i].dataset.src; }
       imgs.forEach((im, j) => { im.classList.toggle("on", i === j); im.setAttribute("aria-hidden", String(i !== j)); });
       tabs.forEach((t, j) => { t.setAttribute("aria-selected", String(i === j)); t.tabIndex = i === j ? 0 : -1; });
       url.textContent = imgs[i].dataset.url;
+      shots.setAttribute("aria-labelledby", tabs[i].id);
       if (focus) tabs[i].focus();
     };
     tabs.forEach((t, i) => t.addEventListener("click", () => select(i)));

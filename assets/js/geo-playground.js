@@ -31,6 +31,7 @@
   });
 
   let G, T, idx, quadras, opts, keys;
+  const compacto = matchMedia("(max-width: 38em)");
   const $ = (s) => host.querySelector(s);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -66,12 +67,17 @@
     let t; $("form").addEventListener("input", () => { clearTimeout(t); t = setTimeout(run, 250); });
     host.classList.add("ready");
     run();
+    compacto.addEventListener("change", () => { drawMap(); run(); });
   }
 
   // ── Mapa ──
   const XY = (p) => ({ x: (p.lo - T.LON0) * T.M_LON, y: (T.LAT0 - p.la) * T.M_LAT });
   function drawMap() {
     const svg = $(".geo-map");
+    // Em tela estreita o SVG encolhe a ~0,2×: rótulos maiores, sem os de quadra e bairro.
+    const compact = compacto.matches, stag = compact ? 64 : 44;
+    svg.classList.toggle("compact", compact);
+    svg.setAttribute("viewBox", compact ? "-250 -470 1580 1470" : "-250 -470 1580 1420");
     let h = "";
     for (const q of quadras) {
       h += `<rect class="q" x="${q.x0 + 14}" y="${q.y0 + 14}" width="${q.x1 - q.x0 - 28}" height="${q.y1 - q.y0 - 28}" rx="10"/>`;
@@ -83,8 +89,8 @@
       h += `<text class="st-lbl" x="${x0 - 50}" y="${r.y + 7}" text-anchor="end">${esc(r.name)}</text>`;
     }
     T.V.forEach((v, i) => {
-      h += `<line class="st" data-k="${v.key}" x1="${v.x}" y1="${y0 - 40}" x2="${v.x}" y2="${y1 + 40 + (i % 2) * 44}"/>`;
-      h += `<text class="st-lbl" x="${v.x}" y="${y1 + 82 + (i % 2) * 44}" text-anchor="middle">${esc(v.name)}</text>`;
+      h += `<line class="st" data-k="${v.key}" x1="${v.x}" y1="${y0 - 40}" x2="${v.x}" y2="${y1 + 40 + (i % 2) * stag}"/>`;
+      h += `<text class="st-lbl" x="${v.x}" y="${y1 + 82 + (i % 2) * stag}" text-anchor="middle">${esc(v.name)}</text>`;
     });
     const R = T.ROD, end = [R.from[0] + R.dir[0] * 600, R.from[1] + R.dir[1] * 600];
     h += `<line class="st rod" data-k="${R.key}" x1="${R.from[0]}" y1="${R.from[1]}" x2="${end[0]}" y2="${end[1]}"/>`;

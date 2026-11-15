@@ -60,11 +60,15 @@
   if (toggle && menu) {
     const set = (open) => {
       toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
       document.body.classList.toggle("menu-open", open);
     };
     toggle.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
     menu.addEventListener("click", (e) => { if (e.target.closest("a")) set(false); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") set(false); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || toggle.getAttribute("aria-expanded") !== "true") return;
+      set(false); toggle.focus(); // devolve o foco a quem abriu
+    });
     matchMedia("(min-width: 60.01em)").addEventListener("change", (e) => { if (e.matches) set(false); });
   }
 

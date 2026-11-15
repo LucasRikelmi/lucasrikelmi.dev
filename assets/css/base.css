@@ -121,7 +121,7 @@ code, kbd, pre { font-family: var(--mono); }
   font-weight: 500; font-size: .9375rem; border: 1px solid var(--line-ctl); background: var(--card);
   transition: transform var(--dur-base) var(--ease-out), background-color var(--dur-fast) var(--ease-in-out), border-color var(--dur-fast) var(--ease-in-out), box-shadow var(--dur-base) var(--ease-out);
 }
-.btn:hover { transform: translateY(-2px); border-color: var(--ink); box-shadow: var(--shadow); }
+@media (hover: hover) { .btn:hover { transform: translateY(-2px); border-color: var(--ink); box-shadow: var(--shadow); } }
 .btn:active { transform: translateY(0) scale(.98); transition-duration: 60ms; }
 .btn.primary { background: var(--accent-fill); color: var(--accent-ink); border-color: var(--accent-fill); }
 .btn.primary:hover { background: var(--accent-fill-2); border-color: var(--accent-fill-2); }
