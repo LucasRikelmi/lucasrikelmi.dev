@@ -40,7 +40,13 @@
     sw.setAttribute("aria-label", "Tema");
     sw.innerHTML = ["system", "light", "dark"].map((m) =>
       `<button type="button" role="radio" data-mode="${m}" aria-label="${LABELS[m]}" title="${LABELS[m]}">${ICONS[m]}</button>`).join("");
-    sw.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) apply(b.dataset.mode); });
+    sw.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      // Crossfade da página inteira na troca de tema, onde houver View Transitions;
+      // sem suporte ou com movimento reduzido, troca direta.
+      if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(() => apply(b.dataset.mode));
+      else apply(b.dataset.mode);
+    });
     sw.addEventListener("keydown", (e) => {
       if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
       const bs = [...sw.querySelectorAll("button")];
