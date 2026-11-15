@@ -7,13 +7,23 @@
     const list = g.nextElementSibling;
     const tabs = [...list.querySelectorAll('[role="tab"]')];
     const url = g.querySelector(".url");
+    // Painel único: as abas controlam a área de telas, não cada imagem.
+    const shots = g.querySelector(".shots");
+    shots.id = shots.id || imgs[0].id + "-painel";
+    shots.setAttribute("role", "tabpanel");
+    tabs.forEach((t, j) => { t.id = t.id || imgs[j].id + "-aba"; t.setAttribute("aria-controls", shots.id); });
+    shots.setAttribute("aria-labelledby", tabs[0].id);
     const select = (i, focus) => {
+      if (imgs[i].dataset.src) { imgs[i].src = imgs[i].dataset.src; delete imgs[i].dataset.src; }
       imgs.forEach((im, j) => { im.classList.toggle("on", i === j); im.setAttribute("aria-hidden", String(i !== j)); });
       tabs.forEach((t, j) => { t.setAttribute("aria-selected", String(i === j)); t.tabIndex = i === j ? 0 : -1; });
       url.textContent = imgs[i].dataset.url;
+      shots.setAttribute("aria-labelledby", tabs[i].id);
       if (focus) tabs[i].focus();
     };
     tabs.forEach((t, i) => t.addEventListener("click", () => select(i)));
+    // pré-carrega a tela quando o dedo/cursor chega na aba (antes do clique)
+    tabs.forEach((t, i) => t.addEventListener("pointerenter", () => { const im = imgs[i]; if (im.dataset.src) { im.src = im.dataset.src; delete im.dataset.src; } }, { once: true }));
     list.addEventListener("keydown", (e) => {
       const i = tabs.indexOf(document.activeElement);
       if (i < 0) return;
@@ -42,8 +52,8 @@
       document.getElementById("lab-cpu-v").textContent = fmt(c.cycle) + " ciclos";
       document.getElementById("lab-dma-v").textContent = fmt(d.cycle) + " ciclos";
       requestAnimationFrame(() => {
-        document.getElementById("lab-cpu").style.width = "100%";
-        document.getElementById("lab-dma").style.width = (100 * d.cycle / c.cycle).toFixed(1) + "%";
+        document.getElementById("lab-cpu").style.setProperty("--v", "1");
+        document.getElementById("lab-dma").style.setProperty("--v", (d.cycle / c.cycle).toFixed(3));
       });
       // linha do tempo do barramento (agrupada em 60 fatias)
       const N = 60, per = Math.ceil(d.cycle / N);

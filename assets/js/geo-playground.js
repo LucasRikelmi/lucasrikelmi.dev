@@ -31,6 +31,7 @@
   });
 
   let G, T, idx, quadras, opts, keys;
+  const compacto = matchMedia("(max-width: 38em)");
   const $ = (s) => host.querySelector(s);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -54,7 +55,7 @@
     };
     opts.cepBairroIndex = G.construirIndiceCepBairro(idx, opts.cepIndex);
     drawMap();
-    $(".geo-ex").innerHTML = EXAMPLES.map((x, i) => `<button type="button" class="chip" data-i="${i}">${esc(x.e)}</button>`).join("");
+    // Os botões de exemplo já vêm no HTML (sem deslocar a página quando o motor carrega).
     $(".geo-ex").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       const x = EXAMPLES[+b.dataset.i];
@@ -66,12 +67,17 @@
     let t; $("form").addEventListener("input", () => { clearTimeout(t); t = setTimeout(run, 250); });
     host.classList.add("ready");
     run();
+    compacto.addEventListener("change", () => { drawMap(); run(); });
   }
 
   // ── Mapa ──
   const XY = (p) => ({ x: (p.lo - T.LON0) * T.M_LON, y: (T.LAT0 - p.la) * T.M_LAT });
   function drawMap() {
     const svg = $(".geo-map");
+    // Em tela estreita o SVG encolhe a ~0,2×: rótulos maiores, sem os de quadra e bairro.
+    const compact = compacto.matches, stag = compact ? 64 : 44;
+    svg.classList.toggle("compact", compact);
+    svg.setAttribute("viewBox", compact ? "-250 -470 1580 1470" : "-250 -470 1580 1420");
     let h = "";
     for (const q of quadras) {
       h += `<rect class="q" x="${q.x0 + 14}" y="${q.y0 + 14}" width="${q.x1 - q.x0 - 28}" height="${q.y1 - q.y0 - 28}" rx="10"/>`;
@@ -83,8 +89,8 @@
       h += `<text class="st-lbl" x="${x0 - 50}" y="${r.y + 7}" text-anchor="end">${esc(r.name)}</text>`;
     }
     T.V.forEach((v, i) => {
-      h += `<line class="st" data-k="${v.key}" x1="${v.x}" y1="${y0 - 40}" x2="${v.x}" y2="${y1 + 40 + (i % 2) * 44}"/>`;
-      h += `<text class="st-lbl" x="${v.x}" y="${y1 + 82 + (i % 2) * 44}" text-anchor="middle">${esc(v.name)}</text>`;
+      h += `<line class="st" data-k="${v.key}" x1="${v.x}" y1="${y0 - 40}" x2="${v.x}" y2="${y1 + 40 + (i % 2) * stag}"/>`;
+      h += `<text class="st-lbl" x="${v.x}" y="${y1 + 82 + (i % 2) * stag}" text-anchor="middle">${esc(v.name)}</text>`;
     });
     const R = T.ROD, end = [R.from[0] + R.dir[0] * 600, R.from[1] + R.dir[1] * 600];
     h += `<line class="st rod" data-k="${R.key}" x1="${R.from[0]}" y1="${R.from[1]}" x2="${end[0]}" y2="${end[1]}"/>`;
@@ -122,15 +128,17 @@
     const ent = [["tipo", q.tipo], ["via", q.via], ["quadra", q.quadra], ["lote", q.lote], ["número", q.numero], ["km", q.km], ["cruzamento", q.viaCruzamento]]
       .map(([k, v]) => `<span class="ent${v == null ? " nil" : ""}"><i>${k}</i>${v == null ? "—" : esc(v)}</span>`).join("");
     const gate = (v) => `<span class="gate" style="left:${v * 100}%"></span>`;
-    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" style="width:${(x.s * 100).toFixed(0)}%"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
+    const bars = ranked.length ? ranked.map((x) => `<div class="cand${x.k === r.viaKey ? " win" : ""}"><span>${esc(x.k)}</span><span class="tr">${gate(G.GATE_FUZZY)}${gate(G.GATE_FORTE)}${gate(G.GATE_EXATO)}<span class="fl" data-v="${x.s.toFixed(3)}"></span></span><b>${x.s.toFixed(2)}</b></div>`).join("") : `<p class="muted">nenhuma via extraída</p>`;
     $(".geo-steps").innerHTML = `
-      <li><span class="n">1</span><div><h4>Normalização</h4><code>${esc(norm || "—")}</code></div></li>
-      <li><span class="n">2</span><div><h4>Entidades extraídas</h4><div class="ents">${ent}</div></div></li>
-      <li><span class="n">3</span><div><h4>Busca da via <small>similaridade · cortes 0,70 / 0,85 / 0,92</small></h4><div class="cands">${bars}</div></div></li>
-      <li class="result" style="--st: var(${st.color})"><span class="n">4</span><div><h4>Decisão</h4>
+      <li><span class="n">1</span><div><h3>Normalização</h3><code>${esc(norm || "—")}</code></div></li>
+      <li><span class="n">2</span><div><h3>Entidades extraídas</h3><div class="ents">${ent}</div></div></li>
+      <li><span class="n">3</span><div><h3>Busca da via <small>similaridade · cortes 0,70 / 0,85 / 0,92</small></h3><div class="cands">${bars}</div></div></li>
+      <li class="result" style="--st: var(${st.color})"><span class="n">4</span><div><h3>Decisão</h3>
         <p class="badge"><b>${st.label}</b> ${st.note}</p>
         <p class="why">${esc(r.motivo)}</p>
         <p class="meta mono">${r.candidatosNaRua || 0} ponto(s) candidatos · ${ms < 1 ? "<1" : ms.toFixed(1)} ms no seu navegador</p></div></li>`;
+    // barras: entram de 0 até o score (transform, sem layout)
+    requestAnimationFrame(() => $(".geo-steps").querySelectorAll(".fl").forEach((f) => f.style.setProperty("--v", f.dataset.v)));
   }
 
   function renderMap(r) {

@@ -40,7 +40,13 @@
     sw.setAttribute("aria-label", "Tema");
     sw.innerHTML = ["system", "light", "dark"].map((m) =>
       `<button type="button" role="radio" data-mode="${m}" aria-label="${LABELS[m]}" title="${LABELS[m]}">${ICONS[m]}</button>`).join("");
-    sw.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) apply(b.dataset.mode); });
+    sw.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      // Crossfade da página inteira na troca de tema, onde houver View Transitions;
+      // sem suporte ou com movimento reduzido, troca direta.
+      if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(() => apply(b.dataset.mode));
+      else apply(b.dataset.mode);
+    });
     sw.addEventListener("keydown", (e) => {
       if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
       const bs = [...sw.querySelectorAll("button")];
@@ -60,12 +66,16 @@
   if (toggle && menu) {
     const set = (open) => {
       toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
       document.body.classList.toggle("menu-open", open);
     };
     toggle.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
     menu.addEventListener("click", (e) => { if (e.target.closest("a")) set(false); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") set(false); });
-    matchMedia("(min-width: 48em)").addEventListener("change", (e) => { if (e.matches) set(false); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || toggle.getAttribute("aria-expanded") !== "true") return;
+      set(false); toggle.focus(); // devolve o foco a quem abriu
+    });
+    matchMedia("(min-width: 60.01em)").addEventListener("change", (e) => { if (e.matches) set(false); });
   }
 
   // Holofote: atualiza --mx/--my do cartão sob o cursor (um listener só, com rAF).
@@ -87,6 +97,11 @@
 
   // Revelação ao rolar
   const els = document.querySelectorAll(".reveal");
+  // Stagger: irmãos .reveal entram em sequência (60 ms cada, no máximo 5 passos).
+  els.forEach((el) => {
+    const sibs = [...el.parentElement.children].filter((s) => s.classList.contains("reveal"));
+    if (sibs.length > 1) el.style.setProperty("--i", Math.min(sibs.indexOf(el), 5));
+  });
   if ("IntersectionObserver" in window && !reduce.matches) {
     const io = new IntersectionObserver((es) => es.forEach((en) => {
       if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }

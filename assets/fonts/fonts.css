@@ -1,4 +1,6 @@
-/* Fontes servidas localmente (subconjuntos latin e latin-ext do Google Fonts, licença OFL). */
+/* Fontes servidas localmente (subconjuntos latin e latin-ext do Google Fonts, licença OFL).
+   Bricolage Grotesque: instância com opsz fixo em 14 e peso 400–700 (fontTools varLib.instancer),
+   76,9 → 38,7 KB no latin. O site só usa 400–700; fixar o eixo óptico não mudou os títulos na comparação visual. */
 /* Bricolage Grotesque · latin-ext */
 @font-face {
   font-family: 'Bricolage Grotesque';
