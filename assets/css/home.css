@@ -103,6 +103,14 @@ h3 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.75rem, 3.4vw
 figure.gallery { margin-bottom: 0; }
 .shot-link { display: block; }
 .shot-link img { width: 100%; height: auto; }
+/* Captura da demo no tema da página: só a imagem visível é baixada (loading="lazy" ignora display: none). */
+.shot-link .shot-escuro { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shot-link .shot-claro { display: none; }
+  :root:not([data-theme="light"]) .shot-link .shot-escuro { display: block; }
+}
+:root[data-theme="dark"] .shot-link .shot-claro { display: none; }
+:root[data-theme="dark"] .shot-link .shot-escuro { display: block; }
 .tabs { display: flex; gap: .375rem; flex-wrap: wrap; margin-top: .875rem; }
 .tabs button { font: 500 .8125rem var(--mono); padding: .5rem .875rem; border-radius: 999px; cursor: pointer; background: transparent; color: var(--muted); border: 1px solid var(--line-ctl); transition: color var(--dur-fast) var(--ease-in-out), border-color var(--dur-fast) var(--ease-in-out), background-color var(--dur-fast) var(--ease-in-out), transform var(--dur-fast) var(--ease-out); min-height: 2.75rem; }
 .tabs button:hover { color: var(--ink); border-color: var(--ink); }
