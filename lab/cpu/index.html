@@ -27,7 +27,8 @@
 <script>
   (function () {
     var r = document.documentElement; r.classList.add("js");
-    try { var t = localStorage.getItem("tema"); if (t === "light" || t === "dark") r.dataset.theme = t; } catch (e) {}
+    // Cookie no domínio lucasrikelmi.dev: a escolha vale também em candeia.lucasrikelmi.dev.
+    try { var c = document.cookie.match(/(?:^|; )tema=(light|dark|system)/); var t = c ? c[1] : localStorage.getItem("tema"); if (t === "light" || t === "dark") r.dataset.theme = t; } catch (e) {}
   })();
 </script>
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">

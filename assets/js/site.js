@@ -6,7 +6,20 @@
   const KEY = "tema";
   const media = matchMedia("(prefers-color-scheme: dark)");
 
-  const stored = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
+  // A escolha (inclusive "system") fica num cookie do domínio lucasrikelmi.dev, para valer também
+  // nos subdomínios (a demo do Candeia). O localStorage é o formato antigo: lido só quando não há
+  // cookie e apagado na primeira gravação.
+  const DOMINIO = /(^|\.)lucasrikelmi\.dev$/.test(location.hostname) ? "; Domain=lucasrikelmi.dev" : "";
+  const SEGURO = location.protocol === "https:" ? "; Secure" : "";
+  const stored = () => {
+    const c = document.cookie.match(/(?:^|; )tema=(light|dark|system)/);
+    if (c) return c[1];
+    try { return localStorage.getItem(KEY); } catch { return null; }
+  };
+  const gravar = (mode) => {
+    document.cookie = `${KEY}=${mode}; Path=/; Max-Age=31536000; SameSite=Lax${DOMINIO}${SEGURO}`;
+    try { localStorage.removeItem(KEY); } catch { /* armazenamento bloqueado */ }
+  };
   const effective = () => root.dataset.theme || (media.matches ? "dark" : "light");
 
   function syncMeta() {
@@ -22,7 +35,7 @@
   function apply(mode) {
     if (mode === "light" || mode === "dark") root.dataset.theme = mode;
     else delete root.dataset.theme;
-    try { mode === "system" ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, mode); } catch { /* armazenamento bloqueado */ }
+    gravar(mode);
     document.querySelectorAll(".theme-switch button").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.mode === mode)));
     syncMeta();
     document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: effective() } }));
